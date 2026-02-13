@@ -1,0 +1,40 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/RAG/.venv/bin/python",
+  "python.analysis.typeCheckingMode": "basic",
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+  "python.formatting.provider": "black",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/.pytest_cache": true,
+    "**/chroma_db_*": false
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true
+  },
+  "[markdown]": {
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "comments": "on",
+      "strings": "on",
+      "other": "on"
+    }
+  },
+  "github.copilot.enable": {
+    "*": true,
+    "markdown": true,
+    "python": true,
+    "typescript": true,
+    "vue": true
+  },
+  "github.copilot.advanced": {
+    "debug.overrideEngine": "gpt-4"
+  }
+}
