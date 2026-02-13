@@ -27,6 +27,11 @@ nuxt-primevue-rag/
 │   └── copilot-instructions.md
 ├── RAG/
 │   ├── index_db.py              # Indeksowanie dokumentów
+│   ├── generate_prompt.py       # Generator promptów (PrimeVue)
+│   ├── generate_prompt_universal.py  # Generator promptów (Universal)
+│   ├── QUICKSTART.md            # Quick start guide
+│   ├── USAGE.md                 # Pełna dokumentacja użycia
+│   ├── EXAMPLE_QUESTIONS.md     # Przykładowe pytania
 │   ├── nuxt-llms-full.txt       # Dokumentacja Nuxt
 │   ├── primevue-llms-full.txt   # Dokumentacja PrimeVue
 │   ├── chroma_db_nuxt/          # Baza wektorowa Nuxt
@@ -34,6 +39,37 @@ nuxt-primevue-rag/
 │   ├── requirements.txt
 │   └── README.md
 ```
+
+## 🎯 RAG-Copilot Workflow (ZERO HALUCYNACJI)
+
+### Filozofia
+
+Zamiast pozwalać Copilotowi wymyślać kod, **karmisz go fragmentami dokumentacji** przed każdym pytaniem.
+
+### Workflow:
+
+1. Uruchom `python3 generate_prompt_universal.py`
+2. Zadaj pytanie (np. "Jak zrobić DataTable w PrimeVue?")
+3. Skopiuj wygenerowany prompt (zawiera fragmenty dokumentacji)
+4. Wklej do GitHub Copilot Chat w VS Code
+5. Copilot odpowiada TYLKO na podstawie dostarczonych fragmentów
+
+### Critical Rules dla promptów:
+
+```
+1. NO OUTSIDE KNOWLEDGE - używaj tylko kontekstu
+2. CITATION MANDATORY - cytuj źródła (Headers)
+3. COMPOSITION API - używaj <script setup>
+4. NO HALLUCINATION - zero wymyślania API
+```
+
+### Gdy używasz tego systemu jako Copilot:
+
+- ✅ Analizuj **tylko** fragmenty w `<context>`
+- ✅ Cytuj źródła: "Źródło: Header 1 > Header 2"
+- ✅ Używaj wzorców kodu dokładnie jak w dokumentacji
+- ❌ NIE wymyślaj API które nie są w kontekście
+- ❌ NIE używaj wiedzy spoza dostarczonych fragmentów
 
 ## Konwencje kodowania
 
@@ -98,13 +134,15 @@ model = "all-MiniLM-L6-v2"  # Model embeddingowy
 5. **Chunking**: Zawsze zachowuj kontekst nagłówków Markdown
 6. **Metadane**: Dodawaj źródło dokumentu (nuxt/primevue) do każdego fragmentu
 
-## Planowane funkcjonalności
+## Status funkcjonalności
 
-- [ ] Skrypt query_db.py do testowania zapytań
+- [x] Indeksowanie dokumentacji (index_db.py)
+- [x] Generator promptów dla pojedynczej bazy (generate_prompt.py)
+- [x] Universal generator dla wielu baz (generate_prompt_universal.py)
+- [x] Dokumentacja użycia (QUICKSTART.md, USAGE.md, EXAMPLE_QUESTIONS.md)
+- [x] Konfiguracja VSCode dla Copilot
 - [ ] FastAPI backend z endpointem /api/query
-- [ ] Połączenie obu baz w jeden system
 - [ ] Frontend w Nuxt 3 z interfejsem czatu
-- [ ] Integracja z LLM (OpenAI/Anthropic) dla generowania odpowiedzi
 - [ ] System cache'owania często zadawanych pytań
 - [ ] Deployment (Docker)
 
