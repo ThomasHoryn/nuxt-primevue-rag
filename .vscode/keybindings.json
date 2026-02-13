@@ -1,0 +1,22 @@
+[
+  {
+    "key": "ctrl+shift+r q",
+    "command": "workbench.action.tasks.runTask",
+    "args": "RAG: Quick Query"
+  },
+  {
+    "key": "ctrl+shift+r p",
+    "command": "workbench.action.tasks.runTask",
+    "args": "RAG: Query PrimeVue"
+  },
+  {
+    "key": "ctrl+shift+r n",
+    "command": "workbench.action.tasks.runTask",
+    "args": "RAG: Query Nuxt"
+  },
+  {
+    "key": "ctrl+shift+r b",
+    "command": "workbench.action.tasks.runTask",
+    "args": "RAG: Query Both (Universal)"
+  }
+]

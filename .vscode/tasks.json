@@ -1,0 +1,72 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "RAG: Query PrimeVue",
+      "type": "shell",
+      "command": "cd ${workspaceFolder}/RAG && python3 generate_prompt.py",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      },
+      "group": "none"
+    },
+    {
+      "label": "RAG: Query Nuxt",
+      "type": "shell",
+      "command": "cd ${workspaceFolder}/RAG && echo '2' | python3 generate_prompt_universal.py",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      },
+      "group": "none"
+    },
+    {
+      "label": "RAG: Query Both (Universal)",
+      "type": "shell",
+      "command": "cd ${workspaceFolder}/RAG && python3 generate_prompt_universal.py",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      },
+      "group": "none"
+    },
+    {
+      "label": "RAG: Quick Query",
+      "type": "shell",
+      "command": "cd ${workspaceFolder}/RAG && python3 quick_query.py '${input:ragQuestion}' --db '${input:ragDatabase}'",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      },
+      "group": "none"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "ragQuestion",
+      "type": "promptString",
+      "description": "What do you want to ask about Nuxt/PrimeVue?",
+      "default": "How to use DataTable in PrimeVue?"
+    },
+    {
+      "id": "ragDatabase",
+      "type": "pickString",
+      "description": "Select documentation source",
+      "options": [
+        "primevue",
+        "nuxt",
+        "both"
+      ],
+      "default": "both"
+    }
+  ]
+}

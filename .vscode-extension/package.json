@@ -1,0 +1,102 @@
+{
+  "name": "rag-copilot-helper",
+  "displayName": "RAG Copilot Helper",
+  "description": "Zero-hallucination Nuxt/PrimeVue development with RAG-powered GitHub Copilot",
+  "version": "1.0.0",
+  "publisher": "your-name",
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other",
+    "Machine Learning"
+  ],
+  "keywords": [
+    "RAG",
+    "Copilot",
+    "Nuxt",
+    "PrimeVue",
+    "AI",
+    "Documentation"
+  ],
+  "activationEvents": [
+    "onCommand:rag-copilot.query",
+    "onCommand:rag-copilot.queryPrimeVue",
+    "onCommand:rag-copilot.queryNuxt",
+    "onCommand:rag-copilot.queryBoth"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "rag-copilot.query",
+        "title": "RAG: Ask Question (Quick)",
+        "category": "RAG Copilot"
+      },
+      {
+        "command": "rag-copilot.queryPrimeVue",
+        "title": "RAG: Query PrimeVue Docs",
+        "category": "RAG Copilot"
+      },
+      {
+        "command": "rag-copilot.queryNuxt",
+        "title": "RAG: Query Nuxt Docs",
+        "category": "RAG Copilot"
+      },
+      {
+        "command": "rag-copilot.queryBoth",
+        "title": "RAG: Query Both Docs",
+        "category": "RAG Copilot"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "rag-copilot.query",
+        "key": "ctrl+shift+r",
+        "mac": "cmd+shift+r"
+      }
+    ],
+    "configuration": {
+      "title": "RAG Copilot Helper",
+      "properties": {
+        "ragCopilot.pythonPath": {
+          "type": "string",
+          "default": "python3",
+          "description": "Path to Python executable"
+        },
+        "ragCopilot.ragPath": {
+          "type": "string",
+          "default": "${workspaceFolder}/RAG",
+          "description": "Path to RAG directory"
+        },
+        "ragCopilot.autoOpenCopilot": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically open GitHub Copilot Chat after generating prompt"
+        },
+        "ragCopilot.autoCopyClipboard": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically copy prompt to clipboard"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "node ./test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "@types/node": "^18.x",
+    "eslint": "^8.45.0"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ThomasHoryn/nuxt-primevue-rag"
+  },
+  "license": "MIT"
+}

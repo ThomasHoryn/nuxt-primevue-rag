@@ -32,12 +32,19 @@ pip install -r requirements.txt
 
 ```
 RAG/
-├── index_db.py              # Skrypt do indeksowania dokumentów
-├── nuxt-llms-full.txt       # Dokumentacja Nuxt
-├── primevue-llms-full.txt   # Dokumentacja PrimeVue
-├── chroma_db_nuxt/          # Baza wektorowa Nuxt (37MB)
-├── chroma_db_primevue/      # Baza wektorowa PrimeVue (24MB)
-└── README.md                # Ten plik
+├── index_db.py                      # Skrypt do indeksowania dokumentów
+├── generate_prompt.py               # Generator promptów (PrimeVue)
+├── generate_prompt_universal.py     # Generator promptów (Universal)
+├── quick_query.py                   # 🆕 Python CLI wrapper
+├── USAGE.md                         # 📖 Pełna dokumentacja użycia
+├── QUICKSTART.md                    # 🚀 Quick start guide
+├── EXAMPLE_QUESTIONS.md             # 💡 50+ przykładowych pytań
+├── nuxt-llms-full.txt               # Dokumentacja Nuxt (2.8MB)
+├── primevue-llms-full.txt           # Dokumentacja PrimeVue (1.8MB)
+├── chroma_db_nuxt/                  # Baza wektorowa Nuxt (37MB)
+├── chroma_db_primevue/              # Baza wektorowa PrimeVue (24MB)
+├── requirements.txt                 # Zależności Python
+└── README.md                        # Ten plik
 ```
 
 ## 🔧 Użycie
@@ -78,7 +85,55 @@ python3 index_db.py
 ✅ **PrimeVue**: `chroma_db_primevue/` (24 MB)
 ✅ **Nuxt**: `chroma_db_nuxt/` (37 MB)
 
-## 📖 Przykład zapytania (TODO)
+## 📖 Użycie RAG systemu
+
+### 🆕 Metoda 1: Python CLI (quick_query.py)
+
+**Najszybsza** - Jeden wiersz terminala!
+
+```bash
+python3 quick_query.py "How to use DataTable?" --db primevue
+python3 quick_query.py "useState in Nuxt 3" --db nuxt
+python3 quick_query.py "useFetch with DataTable" --db both
+
+# Z auto-kopiowaniem do schowka
+python3 quick_query.py "Your question" --db both --copy
+```
+
+**Parametry:**
+
+- `question` - Twoje pytanie (wymagane)
+- `--db` - Źródło: `primevue`, `nuxt`, `both` (default: `both`)
+- `--copy` - Auto-kopiuj do schowka (wymaga `xclip` lub `xsel`)
+
+### Metoda 2: Interactive (generate_prompt_universal.py)
+
+```bash
+python3 generate_prompt_universal.py
+
+# Wybierz bazę (1=PrimeVue, 2=Nuxt, 3=Both)
+# Zadaj pytanie
+# Skopiuj prompt między liniami ====
+```
+
+### Metoda 3: VSCode Extension (Recommended dla DX!)
+
+Zobacz [AUTOMATION.md](../AUTOMATION.md) dla instrukcji instalacji VSCode Extension.
+
+**Usage:** `Ctrl+Shift+R` → pytanie → DONE! 🎉
+
+---
+
+### 📖 Dokumentacja
+
+- **[AUTOMATION.md](../AUTOMATION.md)** - 3 sposoby automatyzacji workflow
+- **[USAGE.md](USAGE.md)** - Pełny przewodnik użycia z GitHub Copilot
+- **[QUICKSTART.md](QUICKSTART.md)** - Quick start guide dla początkujących
+- **[EXAMPLE_QUESTIONS.md](EXAMPLE_QUESTIONS.md)** - 50+ gotowych pytań testowych
+
+---
+
+## 📖 Przykład zapytania (Programmatic)
 
 ```python
 from langchain_chroma import Chroma
@@ -120,10 +175,13 @@ k=3                    # Liczba zwracanych najbardziej podobnych dokumentów
 
 ## 📝 Kolejne kroki
 
-1. **Utworzenie skryptu zapytań** - `query_db.py` do testowania wyszukiwania
-2. **Backend API** - FastAPI do obsługi zapytań z frontendu
-3. **Frontend Nuxt** - interfejs użytkownika z PrimeVue
-4. **Integracja z LLM** - dodanie GPT/Claude do generowania odpowiedzi
+1. ✅ **Skrypt zapytań** - `generate_prompt_universal.py`, `quick_query.py`
+2. ✅ **VSCode Extension** - `rag-copilot-helper` dla maksymalnego DX
+3. ✅ **VSCode Tasks + Keybindings** - `.vscode/tasks.json`, `.vscode/keybindings.json`
+4. ✅ **Kompletna dokumentacja** - USAGE.md, AUTOMATION.md, EXAMPLE_QUESTIONS.md
+5. ⏳ **Backend API** - FastAPI do obsługi zapytań z frontendu
+6. ⏳ **Frontend Nuxt** - interfejs użytkownika z PrimeVue
+7. ⏳ **Integracja z LLM** - dodanie GPT/Claude do generowania odpowiedzi bezpośrednio
 
 ## ❓ Troubleshooting
 

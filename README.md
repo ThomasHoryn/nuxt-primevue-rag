@@ -33,19 +33,29 @@ nuxt-primevue-rag/
 ├── .vscode/
 │   ├── settings.json                # Konfiguracja VSCode
 │   ├── extensions.json              # Rekomendowane rozszerzenia
-│   └── launch.json                  # Konfiguracja debugowania
+│   ├── launch.json                  # Konfiguracja debugowania
+│   ├── tasks.json                   # ⭐ Tasks dla VSCode
+│   └── keybindings.json             # ⭐ Skróty klawiszowe
+├── .vscode-extension/               # ⭐ VSCode Extension
+│   ├── package.json
+│   ├── extension.js
+│   ├── README.md
+│   └── .vscodeignore
 ├── RAG/
 │   ├── index_db.py                  # Skrypt indeksowania
 │   ├── generate_prompt.py           # Generator promptów (PrimeVue)
 │   ├── generate_prompt_universal.py # Generator promptów (Universal)
+│   ├── quick_query.py               # ⭐ Python CLI wrapper
 │   ├── USAGE.md                     # ⭐ Przewodnik użycia z Copilot
-│   ├── EXAMPLE_QUESTIONS.md         # Przykładowe pytania
+│   ├── QUICKSTART.md                # Quick start guide
+│   ├── EXAMPLE_QUESTIONS.md         # 50+ przykładowych pytań
 │   ├── nuxt-llms-full.txt           # Dokumentacja Nuxt (2.8MB)
 │   ├── primevue-llms-full.txt       # Dokumentacja PrimeVue (1.8MB)
 │   ├── chroma_db_nuxt/              # Baza wektorowa Nuxt (37MB)
 │   ├── chroma_db_primevue/          # Baza wektorowa PrimeVue (24MB)
 │   ├── requirements.txt             # Zależności Python
 │   └── README.md                    # Szczegółowa dokumentacja RAG
+├── AUTOMATION.md                    # ⭐ Przewodnik automatyzacji
 ├── .gitignore
 └── README.md                        # Ten plik
 ```
@@ -67,18 +77,42 @@ nuxt-primevue-rag/
 
 ## 🎯 ZERO HALUCYNACJI - Użycie z GitHub Copilot
 
-**Nowa funkcjonalność!** System pozwala używać RAG z GitHub Copilot bez halucynacji:
+### 🚀 3 Sposoby automatyzacji workflow
+
+#### 🥇 Metoda 1: VSCode Extension (NAJLEPSZY DX!)
+
+**One-click RAG queries bezpośrednio w VSCode!**
 
 ```bash
-# Uruchom generator promptów
-cd RAG
-python3 generate_prompt_universal.py
-
-# Zadaj pytanie → Skopiuj wygenerowany prompt → Wklej do Copilot Chat
+cd .vscode-extension
+npm install
+vsce package
+code --install-extension rag-copilot-helper-1.0.0.vsix
 ```
 
-📖 **Pełny przewodnik:** [RAG/USAGE.md](RAG/USAGE.md)
-💡 **Przykładowe pytania:** [RAG/EXAMPLE_QUESTIONS.md](RAG/EXAMPLE_QUESTIONS.md)
+**Użycie:** Naciśnij `Ctrl+Shift+R` → Wpisz pytanie → Gotowe! 🎉
+
+📖 [Instrukcje instalacji extension](.vscode-extension/README.md)
+
+#### 🥈 Metoda 2: VSCode Tasks + Keybindings
+
+**Skonfigurowane i gotowe do użycia!**
+
+- `Ctrl+Shift+R Q` - Quick Query
+- `Ctrl+Shift+R P` - Query PrimeVue
+- `Ctrl+Shift+R N` - Query Nuxt
+- `Ctrl+Shift+R B` - Query Both
+
+#### 🥉 Metoda 3: Python CLI
+
+```bash
+cd RAG
+python3 quick_query.py "Your question" --db both --copy
+```
+
+🎬 **Kompletny przewodnik automatyzacji:** [AUTOMATION.md](AUTOMATION.md)
+📖 **Pełny przewodnik użycia:** [RAG/USAGE.md](RAG/USAGE.md)
+💡 **50+ Przykładowych pytań:** [RAG/EXAMPLE_QUESTIONS.md](RAG/EXAMPLE_QUESTIONS.md)
 
 ### Jak to działa?
 
@@ -94,14 +128,25 @@ python3 generate_prompt_universal.py
 
 ## 📊 Status projektu
 
+### ✅ Gotowe (Production Ready!)
+
 - ✅ Indeksowanie dokumentacji Nuxt
 - ✅ Indeksowanie dokumentacji PrimeVue
-- ✅ Bazy wektorowe ChromaDB
+- ✅ Bazy wektorowe ChromaDB (61MB łącznie)
 - ✅ **Generator promptów dla Copilot (generate_prompt.py)**
 - ✅ **Universal query tool (generate_prompt_universal.py)**
-- ✅ **Dokumentacja użycia (USAGE.md)**
-- ⏳ FastAPI backend
-- ⏳ Frontend Nuxt + PrimeVue
+- ✅ **Python CLI wrapper (quick_query.py)**
+- ✅ **VSCode Extension (rag-copilot-helper)**
+- ✅ **VSCode Tasks + Keybindings**
+- ✅ **Kompletna dokumentacja (USAGE.md, AUTOMATION.md)**
+- ✅ **50+ przykładowych pytań (EXAMPLE_QUESTIONS.md)**
+
+### ⏳ Planowane rozszerzenia
+
+- ⏳ FastAPI backend z /api/query endpoint
+- ⏳ Frontend Nuxt + PrimeVue z chat interface
+- ⏳ Bezpośrednia integracja LLM (OpenAI/Anthropic)
+- ⏳ Docker deployment
 
 ## 🔍 Jak to działa?
 

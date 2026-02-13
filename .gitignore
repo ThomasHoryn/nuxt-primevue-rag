@@ -55,11 +55,18 @@ install.log
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+!.vscode/keybindings.json
 .idea/
 *.swp
 *.swo
 *~
 .DS_Store
+
+# VSCode Extension
+.vscode-extension/node_modules/
+.vscode-extension/*.vsix
+.vscode-extension/out/
+.vscode-extension/.vscode-test/
 
 # Nuxt
 .nuxt/

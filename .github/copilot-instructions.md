@@ -139,12 +139,44 @@ model = "all-MiniLM-L6-v2"  # Model embeddingowy
 - [x] Indeksowanie dokumentacji (index_db.py)
 - [x] Generator promptów dla pojedynczej bazy (generate_prompt.py)
 - [x] Universal generator dla wielu baz (generate_prompt_universal.py)
-- [x] Dokumentacja użycia (QUICKSTART.md, USAGE.md, EXAMPLE_QUESTIONS.md)
+- [x] Python CLI wrapper (quick_query.py)
+- [x] VSCode Extension (rag-copilot-helper)
+- [x] VSCode Tasks + Keybindings
+- [x] Dokumentacja użycia (QUICKSTART.md, USAGE.md, EXAMPLE_QUESTIONS.md, AUTOMATION.md)
 - [x] Konfiguracja VSCode dla Copilot
 - [ ] FastAPI backend z endpointem /api/query
 - [ ] Frontend w Nuxt 3 z interfejsem czatu
 - [ ] System cache'owania często zadawanych pytań
 - [ ] Deployment (Docker)
+
+## 🚀 Narzędzia automatyzacji
+
+### VSCode Extension (Recommended)
+
+**Najlepszy DX:** One-click RAG queries bezpośrednio w VS Code!
+
+```bash
+cd .vscode-extension
+npm install
+code --install-extension rag-copilot-helper-*.vsix
+```
+
+**Użycie:** `Ctrl+Shift+R` → pytanie → DONE!
+
+### Python CLI
+
+```bash
+python3 RAG/quick_query.py "Your question" --db both --copy
+```
+
+### VSCode Tasks
+
+- `Ctrl+Shift+R Q` - Quick Query
+- `Ctrl+Shift+R P` - Query PrimeVue
+- `Ctrl+Shift+R N` - Query Nuxt
+- `Ctrl+Shift+R B` - Query Both
+
+Pełna dokumentacja: [AUTOMATION.md](../AUTOMATION.md)
 
 ## Przykładowe zapytania do systemu RAG
 
