@@ -409,12 +409,18 @@ python3 -c "from langchain_chroma import Chroma; from config import DB_PATHS; vs
 - ✅ **Pinned dependencies**: Reproducible builds
 - ✅ **Unified tool**: Single script replaces three
 
-### Deprecated Files
+### Removed Files
 
-The following files are kept for reference but should not be used:
+The following files were removed in the refactoring (preserved in git history):
 
-- ❌ `generate_prompt.py` → Use `quick_query.py` instead
-- ❌ `generate_prompt_universal.py` → Use `quick_query.py --interactive` instead
+- ❌ `generate_prompt.py` → Replaced by `quick_query.py`
+- ❌ `generate_prompt_universal.py` → Replaced by `quick_query.py --interactive`
+
+**Note**: Old scripts are preserved in git history and can be retrieved using:
+
+```bash
+git log --all --full-history -- RAG/generate_prompt.py
+```
 
 ### Migration Guide
 

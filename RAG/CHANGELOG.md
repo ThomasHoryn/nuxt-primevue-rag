@@ -1,5 +1,19 @@
 # Changelog - RAG System Refactoring
 
+## Version 2.0.1 (February 13, 2026)
+
+### 🧹 Cleanup
+
+#### Removed Deprecated Script Files
+
+- **Action**: Permanently removed `.deprecated` files from repository
+- **Files Removed**:
+  - `generate_prompt.py.deprecated`
+  - `generate_prompt_universal.py.deprecated`
+- **Impact**: Cleaner repository structure
+- **Note**: Files preserved in git history (commit ae2c2f8) and can be restored if needed
+- **Commit**: bd944ce
+
 ## Version 2.0.0 (February 13, 2026)
 
 ### 🔒 Security Fixes

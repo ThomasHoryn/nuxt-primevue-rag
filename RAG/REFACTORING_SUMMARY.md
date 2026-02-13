@@ -269,10 +269,13 @@ python3 quick_query.py "test" --db nuxt  # Test the system
 - ✅ `index_db.py` - Batch processing, config import, type hints
 - ✅ `requirements.txt` - Pinned versions, new dependencies
 
-### Deprecated Files
+### Removed Files
 
-- 🗄️ `generate_prompt.py` → `generate_prompt.py.deprecated`
-- 🗄️ `generate_prompt_universal.py` → `generate_prompt_universal.py.deprecated`
+- ❌ `generate_prompt.py` → Deleted (preserved in git history at ae2c2f8)
+- ❌ `generate_prompt_universal.py` → Deleted (preserved in git history at ae2c2f8)
+
+### Archived Files
+
 - 🗄️ `README.md` (old) → `README_OLD.md`
 
 ### Unchanged Files
