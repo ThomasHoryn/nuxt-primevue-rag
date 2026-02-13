@@ -1,51 +1,143 @@
+"""
+RAG Documentation Indexer
+Builds vector database from documentation files with batch processing and progress tracking.
+"""
+
 import os
+import argparse
+from typing import List
+from tqdm import tqdm
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
 from langchain_community.embeddings import SentenceTransformerEmbeddings
+from langchain_core.documents import Document
 
-# KONFIGURACJA
-FILE_PATH = "nuxt-llms-full.txt"
-DB_PATH = "./chroma_db_nuxt"
+# Import configuration
+from config import (
+    DB_PATHS,
+    EMBEDDING_MODEL_NAME,
+    CHUNK_SIZE,
+    CHUNK_OVERLAP,
+    HEADERS_TO_SPLIT_ON,
+    BATCH_SIZE
+)
 
-def build_index():
-    print(f"1. 📖 Wczytywanie {FILE_PATH}...")
-    with open(FILE_PATH, "r", encoding="utf-8") as f:
+
+def build_index(db_name: str) -> None:
+    """
+    Build vector database index from documentation file.
+
+    Args:
+        db_name: Name of the database to build (primevue, nuxt)
+    """
+    if db_name not in DB_PATHS:
+        raise ValueError(f"Unknown database: {db_name}. Available: {list(DB_PATHS.keys())}")
+
+    db_info = DB_PATHS[db_name]
+    file_path = db_info['source_file']
+    db_path = db_info['path']
+    db_display_name = db_info['name']
+
+    print(f"1. 📖 Wczytywanie {file_path}...")
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"Source file not found: {file_path}")
+
+    with open(file_path, "r", encoding="utf-8") as f:
         text = f.read()
 
-    # --- STRATEGIA CHUNKOWANIA DLA MNIEJSZYCH HALUCYNACJI ---
-    # Krok A: Dzielimy logicznie po nagłówkach Markdown (żeby zachować kontekst sekcji)
-    headers_to_split_on = [
-        ("#", "Header 1"),
-        ("##", "Header 2"),
-        ("###", "Header 3"),
-    ]
-    markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=headers_to_split_on)
+    # Step A: Split by Markdown headers to preserve section context
+    print("2. 📄 Dzielenie dokumentu na sekcje...")
+    markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=HEADERS_TO_SPLIT_ON)
     md_header_splits = markdown_splitter.split_text(text)
+    print(f"   ✓ Znaleziono {len(md_header_splits)} logicznych sekcji Markdown.")
 
-    print(f"   Znaleziono {len(md_header_splits)} logicznych sekcji Markdown.")
-
-    # Krok B: Docinamy zbyt długie sekcje, ale zachowujemy metadane nagłówków
+    # Step B: Further split long sections while preserving header metadata
+    print("3. ✂️  Dzielenie długich sekcji na mniejsze chunki...")
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
-        chunk_overlap=200,
+        chunk_size=CHUNK_SIZE,
+        chunk_overlap=CHUNK_OVERLAP,
         separators=["\n\n", "\n", " ", ""]
     )
-    final_splits = text_splitter.split_documents(md_header_splits)
-    print(f"   Podzielono na {len(final_splits)} ostatecznych chunków (z kontekstem nagłówków).")
+    final_splits: List[Document] = text_splitter.split_documents(md_header_splits)
+    print(f"   ✓ Utworzono {len(final_splits)} ostatecznych chunków (z kontekstem nagłówków).")
 
-    # --- EMBEDDING ---
-    print("2. 🧠 Tworzenie embeddingów (może to chwilę potrwać)...")
-    # Używamy lokalnego modelu (darmowy, szybki, dobry do kodu)
-    embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
+    # Step C: Generate embeddings with batch processing
+    print(f"4. 🧠 Tworzenie embeddingów (model: {EMBEDDING_MODEL_NAME})...")
+    print(f"   Przetwarzanie w partiach po {BATCH_SIZE} dokumentów...")
 
-    # Zapis do ChromaDB
-    Chroma.from_documents(
-        documents=final_splits,
-        embedding=embedding_function,
-        persist_directory=DB_PATH
+    embedding_function = SentenceTransformerEmbeddings(model_name=EMBEDDING_MODEL_NAME)
+
+    # Process in batches with progress bar
+    vectorstore = None
+    for i in tqdm(range(0, len(final_splits), BATCH_SIZE), desc="Indeksowanie"):
+        batch = final_splits[i:i + BATCH_SIZE]
+
+        if vectorstore is None:
+            # Create new database with first batch
+            vectorstore = Chroma.from_documents(
+                documents=batch,
+                embedding=embedding_function,
+                persist_directory=db_path
+            )
+        else:
+            # Add subsequent batches
+            vectorstore.add_documents(batch)
+
+    print(f"✅ Sukces! Baza {db_display_name} zapisana w {db_path}")
+    print(f"   Łączna liczba dokumentów: {len(final_splits)}")
+
+
+def main() -> None:
+    """Main entry point for the indexer."""
+    parser = argparse.ArgumentParser(
+        description='Build RAG vector database from documentation',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Index single database
+  python3 index_db.py --db primevue
+  python3 index_db.py --db nuxt
+
+  # Index all databases
+  python3 index_db.py --all
+        """
     )
-    print(f"✅ Sukces! Baza zapisana w {DB_PATH}")
+
+    parser.add_argument(
+        '--db',
+        choices=list(DB_PATHS.keys()),
+        help='Database to build'
+    )
+    parser.add_argument(
+        '--all',
+        action='store_true',
+        help='Build all databases'
+    )
+
+    args = parser.parse_args()
+
+    if not args.db and not args.all:
+        parser.error("Specify either --db or --all")
+
+    try:
+        if args.all:
+            print(f"\n{'='*80}")
+            print("Building all databases...")
+            print(f"{'='*80}\n")
+            for db_name in DB_PATHS.keys():
+                print(f"\n--- Database: {DB_PATHS[db_name]['name']} ---\n")
+                build_index(db_name)
+                print()
+        else:
+            build_index(args.db)
+
+    except Exception as e:
+        print(f"\n❌ Błąd: {e}")
+        import traceback
+        traceback.print_exc()
+        exit(1)
+
 
 if __name__ == "__main__":
-    build_index()
+    main()

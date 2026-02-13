@@ -1,80 +1,141 @@
 #!/usr/bin/env python3
 """
-Quick RAG Query - CLI wrapper for automated workflows
-Usage: python3 quick_query.py "Your question" --db primevue|nuxt|both
+Quick RAG Query - Unified CLI and interactive tool for RAG queries
+Usage:
+  CLI mode: python3 quick_query.py "Your question" --db primevue|nuxt|both
+  Interactive mode: python3 quick_query.py --interactive
 """
 
 import argparse
+import html
+import os
 import sys
+from typing import List, Dict, Tuple, Optional, Any
 from langchain_chroma import Chroma
 from langchain_community.embeddings import SentenceTransformerEmbeddings
+from langchain_core.documents import Document
 
-# Configuration
-TOP_K = 7
-DATABASES = {
-    'primevue': {
-        'path': './chroma_db_primevue',
-        'name': 'PrimeVue'
-    },
-    'nuxt': {
-        'path': './chroma_db_nuxt',
-        'name': 'Nuxt'
-    }
-}
+# Import configuration
+from config import DB_PATHS, EMBEDDING_MODEL_NAME, TOP_K
 
-def load_vectorstore(db_name):
-    """Load vector database"""
-    if db_name not in DATABASES:
-        raise ValueError(f"Unknown database: {db_name}")
 
-    print(f"📖 Ładowanie bazy: {DATABASES[db_name]['name']}...", file=sys.stderr)
-    embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
+def sanitize_input(text: str) -> str:
+    """
+    Sanitize user input to prevent XML/prompt injection attacks.
+
+    Args:
+        text: User input to sanitize
+
+    Returns:
+        Sanitized text with escaped XML characters
+    """
+    return html.escape(text, quote=False)
+
+
+def load_vectorstore(db_name: str, embedding_function: SentenceTransformerEmbeddings) -> Tuple[Chroma, str]:
+    """
+    Load vector database.
+
+    Args:
+        db_name: Database name (primevue, nuxt)
+        embedding_function: Pre-initialized embedding model
+
+    Returns:
+        Tuple of (vectorstore, framework_name)
+    """
+    if db_name not in DB_PATHS:
+        raise ValueError(f"Unknown database: {db_name}. Available: {list(DB_PATHS.keys())}")
+
+    db_info = DB_PATHS[db_name]
+    print(f"📖 Ładowanie bazy: {db_info['name']}...", file=sys.stderr)
+
     vectorstore = Chroma(
-        persist_directory=DATABASES[db_name]['path'],
-        embedding_function=embeddings
+        persist_directory=db_info['path'],
+        embedding_function=embedding_function
     )
-    return vectorstore, DATABASES[db_name]['name']
+    return vectorstore, db_info['name']
 
-def generate_prompt(question, db_choice):
-    """Generate RAG prompt from question and database choice"""
+
+def retrieve_with_scores(
+    vectorstore: Chroma,
+    question: str,
+    framework_name: str,
+    k: int = TOP_K
+) -> List[Tuple[Document, float, str]]:
+    """
+    Retrieve documents with similarity scores.
+
+    Args:
+        vectorstore: ChromaDB vectorstore
+        question: Query string
+        framework_name: Name of the framework (for metadata)
+        k: Number of results to retrieve
+
+    Returns:
+        List of (document, score, framework_name) tuples
+    """
+    docs_with_scores = vectorstore.similarity_search_with_score(question, k=k)
+    return [(doc, score, framework_name) for doc, score in docs_with_scores]
+
+
+def generate_prompt(question: str, db_choice: str, embedding_function: SentenceTransformerEmbeddings) -> str:
+    """
+    Generate RAG prompt from question and database choice.
+
+    Args:
+        question: User question (will be sanitized)
+        db_choice: Database choice (primevue, nuxt, both)
+        embedding_function: Pre-initialized embedding model
+
+    Returns:
+        Complete prompt string ready for LLM
+    """
+    # Sanitize input to prevent prompt injection
+    safe_question = sanitize_input(question)
 
     # Load databases
-    vectorstores = []
+    docs_with_scores: List[Tuple[Document, float, str]] = []
+
     if db_choice == 'both':
         for db in ['primevue', 'nuxt']:
-            vs, name = load_vectorstore(db)
-            vectorstores.append((vs, name, db))
+            vs, name = load_vectorstore(db, embedding_function)
+            print(f"🧠 Wyszukiwanie w dokumentacji {name}...", file=sys.stderr)
+            docs_with_scores.extend(retrieve_with_scores(vs, question, name, k=TOP_K))
+
+        # Sort by score (lower is better for distance metrics) and take top results
+        docs_with_scores.sort(key=lambda x: x[1])
+        docs_with_scores = docs_with_scores[:TOP_K * 2]  # Keep top results from both
     else:
-        vs, name = load_vectorstore(db_choice)
-        vectorstores.append((vs, name, db_choice))
+        vs, name = load_vectorstore(db_choice, embedding_function)
+        print(f"🧠 Wyszukiwanie w dokumentacji {name}...", file=sys.stderr)
+        docs_with_scores = retrieve_with_scores(vs, question, name, k=TOP_K)
 
-    # Collect fragments
-    all_fragments = []
-    for vectorstore, framework_name, db_key in vectorstores:
-        print(f"🧠 Wyszukiwanie w dokumentacji {framework_name}...", file=sys.stderr)
-        docs = vectorstore.similarity_search(question, k=TOP_K)
+    # Build fragments list
+    all_fragments: List[Dict[str, Any]] = []
+    frameworks = set()
 
-        for doc in docs:
-            metadata = doc.metadata
-            headers = []
-            for i in range(1, 4):
-                header_key = f'Header_{i}'
-                if header_key in metadata and metadata[header_key]:
-                    headers.append(metadata[header_key])
+    for doc, score, framework_name in docs_with_scores:
+        frameworks.add(framework_name)
+        metadata = doc.metadata
+        headers = []
+        for i in range(1, 4):
+            header_key = f'Header_{i}'
+            if header_key in metadata and metadata[header_key]:
+                headers.append(metadata[header_key])
 
-            source = f"{framework_name} - {' > '.join(headers)}" if headers else framework_name
-            all_fragments.append({
-                'content': doc.page_content,
-                'source': source,
-                'framework': framework_name
-            })
+        source = f"{framework_name} - {' > '.join(headers)}" if headers else framework_name
+        all_fragments.append({
+            'content': doc.page_content,
+            'source': source,
+            'framework': framework_name,
+            'score': score
+        })
 
     # Build prompt
-    frameworks = list(set([f['framework'] for f in all_fragments]))
     if len(frameworks) > 1:
         role = "You are an expert coding assistant for Nuxt and PrimeVue"
     else:
-        role = f"You are an expert coding assistant specialized in {frameworks[0]}"
+        role = f"You are an expert coding assistant specialized in {list(frameworks)[0]}"
 
     context_parts = []
     for i, fragment in enumerate(all_fragments, 1):
@@ -98,7 +159,7 @@ def generate_prompt(question, db_choice):
 </context>
 
 <question>
-{question}
+{safe_question}
 </question>
 
 {critical_rules}
@@ -107,19 +168,94 @@ Provide a comprehensive answer based strictly on the context above."""
 
     return final_output
 
-def main():
+
+def interactive_mode(embedding_function: SentenceTransformerEmbeddings) -> None:
+    """
+    Interactive mode for continuous queries.
+
+    Args:
+        embedding_function: Pre-initialized embedding model
+    """
+    print("\n🎯 Tryb interaktywny RAG")
+    print("="*80)
+    print("Dostępne bazy: PrimeVue, Nuxt, Both")
+    print("Wpisz 'exit' lub 'quit' aby wyjść")
+    print("="*80 + "\n")
+
+    while True:
+        try:
+            db_choice = input("📚 Wybierz bazę (primevue/nuxt/both): ").strip().lower()
+            if db_choice in ['exit', 'quit']:
+                break
+            if db_choice not in ['primevue', 'nuxt', 'both']:
+                print("❌ Nieprawidłowy wybór! Dostępne: primevue, nuxt, both")
+                continue
+
+            question = input("🔎 Twoje pytanie: ").strip()
+            if not question:
+                continue
+            if question.lower() in ['exit', 'quit']:
+                break
+
+            print(f"\n{'='*80}")
+            prompt = generate_prompt(question, db_choice, embedding_function)
+            print(f"{'='*80}")
+            print("SKOPIUJ PONIŻSZY PROMPT DO GITHUB COPILOT CHAT")
+            print(f"{'='*80}\n")
+            print(prompt)
+            print(f"\n{'='*80}\n")
+
+        except KeyboardInterrupt:
+            print("\n\nDo widzenia!")
+            break
+        except Exception as e:
+            print(f"❌ Błąd: {e}", file=sys.stderr)
+
+
+def copy_to_clipboard(text: str) -> bool:
+    """
+    Copy text to clipboard using cross-platform library.
+
+    Args:
+        text: Text to copy
+
+    Returns:
+        True if successful, False otherwise
+    """
+    try:
+        import pyperclip
+        pyperclip.copy(text)
+        return True
+    except ImportError:
+        print("⚠️  pyperclip nie jest zainstalowane. Uruchom: pip install pyperclip", file=sys.stderr)
+        return False
+    except Exception as e:
+        print(f"⚠️  Nie można skopiować do schowka: {e}", file=sys.stderr)
+        return False
+
+
+def main() -> None:
+    """Main entry point for the application."""
     parser = argparse.ArgumentParser(
         description='Quick RAG Query - Get contextual prompts for GitHub Copilot',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
+  # CLI mode
   python3 quick_query.py "How to use DataTable?" --db primevue
   python3 quick_query.py "useState in Nuxt 3" --db nuxt
-  python3 quick_query.py "useFetch with DataTable" --db both
+  python3 quick_query.py "useFetch with DataTable" --db both --copy
+
+  # Interactive mode
+  python3 quick_query.py --interactive
         """
     )
 
-    parser.add_argument('question', help='Your question about Nuxt/PrimeVue')
+    parser.add_argument(
+        'question',
+        nargs='?',
+        help='Your question about Nuxt/PrimeVue (not needed in interactive mode)'
+    )
     parser.add_argument(
         '--db',
         choices=['primevue', 'nuxt', 'both'],
@@ -129,47 +265,60 @@ Examples:
     parser.add_argument(
         '--copy',
         action='store_true',
-        help='Copy result to clipboard (requires xclip or xsel)'
+        help='Copy result to clipboard (requires pyperclip)'
+    )
+    parser.add_argument(
+        '--interactive',
+        action='store_true',
+        help='Run in interactive mode for continuous queries'
     )
 
     args = parser.parse_args()
 
+    # Initialize embedding model once (expensive operation)
+    print("🧠 Inicjalizacja modelu embeddingowego...", file=sys.stderr)
+    embedding_function = SentenceTransformerEmbeddings(model_name=EMBEDDING_MODEL_NAME)
+
     try:
-        print(f"\n{'='*80}", file=sys.stderr)
-        print(f"❓ Pytanie: {args.question}", file=sys.stderr)
-        print(f"📚 Źródło: {args.db}", file=sys.stderr)
-        print(f"{'='*80}\n", file=sys.stderr)
+        if args.interactive:
+            # Interactive mode
+            interactive_mode(embedding_function)
+        else:
+            # CLI mode
+            if not args.question:
+                parser.error("question is required in CLI mode (or use --interactive)")
 
-        # Generate prompt
-        prompt = generate_prompt(args.question, args.db)
+            print(f"\n{'='*80}", file=sys.stderr)
+            print(f"❓ Pytanie: {args.question}", file=sys.stderr)
+            print(f"📚 Źródło: {args.db}", file=sys.stderr)
+            print(f"{'='*80}\n", file=sys.stderr)
 
-        # Output prompt
-        print("\n" + "="*80)
-        print("SKOPIUJ PONIŻSZY PROMPT DO GITHUB COPILOT CHAT")
-        print("="*80 + "\n")
-        print(prompt)
-        print("\n" + "="*80)
-        print("Wklej do GitHub Copilot Chat: Ctrl+Alt+I")
-        print("="*80 + "\n")
+            # Generate prompt
+            prompt = generate_prompt(args.question, args.db, embedding_function)
 
-        # Try to copy to clipboard
-        if args.copy:
-            try:
-                import subprocess
-                subprocess.run(['xclip', '-selection', 'clipboard'],
-                             input=prompt.encode(), check=True)
-                print("✅ Skopiowano do schowka!", file=sys.stderr)
-            except (subprocess.CalledProcessError, FileNotFoundError):
-                try:
-                    subprocess.run(['xsel', '--clipboard', '--input'],
-                                 input=prompt.encode(), check=True)
+            # Output prompt
+            print("\n" + "="*80)
+            print("SKOPIUJ PONIŻSZY PROMPT DO GITHUB COPILOT CHAT")
+            print("="*80 + "\n")
+            print(prompt)
+            print("\n" + "="*80)
+            print("Wklej do GitHub Copilot Chat: Ctrl+Alt+I")
+            print("="*80 + "\n")
+
+            # Try to copy to clipboard
+            if args.copy:
+                if copy_to_clipboard(prompt):
                     print("✅ Skopiowano do schowka!", file=sys.stderr)
-                except:
-                    print("⚠️  Nie można skopiować (zainstaluj xclip lub xsel)", file=sys.stderr)
 
+    except KeyboardInterrupt:
+        print("\n\nPrzerwano przez użytkownika", file=sys.stderr)
+        sys.exit(130)
     except Exception as e:
         print(f"\n❌ Błąd: {e}", file=sys.stderr)
+        import traceback
+        traceback.print_exc()
         sys.exit(1)
+
 
 if __name__ == '__main__':
     main()
