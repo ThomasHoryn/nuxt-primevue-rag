@@ -39,7 +39,7 @@ def build_index(db_name: str) -> None:
     db_path = db_info['path']
     db_display_name = db_info['name']
 
-    print(f"1. 📖 Wczytywanie {file_path}...")
+    print(f"1. 📖 Loading {file_path}...")
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Source file not found: {file_path}")
 
@@ -47,30 +47,30 @@ def build_index(db_name: str) -> None:
         text = f.read()
 
     # Step A: Split by Markdown headers to preserve section context
-    print("2. 📄 Dzielenie dokumentu na sekcje...")
+    print("2. 📄 Splitting document into sections...")
     markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=HEADERS_TO_SPLIT_ON)
     md_header_splits = markdown_splitter.split_text(text)
-    print(f"   ✓ Znaleziono {len(md_header_splits)} logicznych sekcji Markdown.")
+    print(f"   ✓ Found {len(md_header_splits)} logical Markdown sections.")
 
     # Step B: Further split long sections while preserving header metadata
-    print("3. ✂️  Dzielenie długich sekcji na mniejsze chunki...")
+    print("3. ✂️  Splitting long sections into smaller chunks...")
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP,
         separators=["\n\n", "\n", " ", ""]
     )
     final_splits: List[Document] = text_splitter.split_documents(md_header_splits)
-    print(f"   ✓ Utworzono {len(final_splits)} ostatecznych chunków (z kontekstem nagłówków).")
+    print(f"   ✓ Created {len(final_splits)} final chunks (with header context).")
 
     # Step C: Generate embeddings with batch processing
-    print(f"4. 🧠 Tworzenie embeddingów (model: {EMBEDDING_MODEL_NAME})...")
-    print(f"   Przetwarzanie w partiach po {BATCH_SIZE} dokumentów...")
+    print(f"4. 🧠 Creating embeddings (model: {EMBEDDING_MODEL_NAME})...")
+    print(f"   Processing in batches of {BATCH_SIZE} documents...")
 
     embedding_function = SentenceTransformerEmbeddings(model_name=EMBEDDING_MODEL_NAME)
 
     # Process in batches with progress bar
     vectorstore = None
-    for i in tqdm(range(0, len(final_splits), BATCH_SIZE), desc="Indeksowanie"):
+    for i in tqdm(range(0, len(final_splits), BATCH_SIZE), desc="Indexing"):
         batch = final_splits[i:i + BATCH_SIZE]
 
         if vectorstore is None:
@@ -84,8 +84,8 @@ def build_index(db_name: str) -> None:
             # Add subsequent batches
             vectorstore.add_documents(batch)
 
-    print(f"✅ Sukces! Baza {db_display_name} zapisana w {db_path}")
-    print(f"   Łączna liczba dokumentów: {len(final_splits)}")
+    print(f"✅ Success! Database {db_display_name} saved in {db_path}")
+    print(f"   Total number of documents: {len(final_splits)}")
 
 
 def main() -> None:
@@ -133,7 +133,7 @@ Examples:
             build_index(args.db)
 
     except Exception as e:
-        print(f"\n❌ Błąd: {e}")
+        print(f"\n❌ Error: {e}")
         import traceback
         traceback.print_exc()
         exit(1)

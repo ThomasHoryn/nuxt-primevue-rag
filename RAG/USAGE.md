@@ -1,93 +1,93 @@
-# 🎯 Jak używać RAG z GitHub Copilot - ZERO HALUCYNACJI
+# 🎯 How to use RAG with GitHub Copilot - ZERO HALLUCINATION
 
-## Filozofia
+## Philosophy
 
-Zamiast pozwalać Copilotowi "wymyślać" kod oparty na jego treningu, **karmisz go aktualnymi fragmentami dokumentacji** przed każdym pytaniem. Copilot staje się wtedy "tłumaczem dokumentacji", nie "wyrocznia".
+Instead of letting Copilot "make up" code based on its training, **you feed it actual documentation fragments** before each question. Copilot becomes a "documentation translator", not an "oracle".
 
 ---
 
-## 🚀 Quick Start (3 kroki)
+## 🚀 Quick Start (3 steps)
 
-### 1. Uruchom generator promptów
+### 1. Run the prompt generator
 
 ```bash
 cd RAG
-python3 generate_prompt.py          # Tylko PrimeVue
-# lub
-python3 generate_prompt_universal.py  # Wybór: PrimeVue/Nuxt/Oba
+python3 generate_prompt.py          # PrimeVue only
+# or
+python3 generate_prompt_universal.py  # Choose: PrimeVue/Nuxt/Both
 ```
 
-### 2. Zadaj pytanie
+### 2. Ask a question
 
 ```
-🔎 O co chcesz zapytać?: Jak zrobić sortowanie w DataTable?
+🔎 What do you want to ask?: How to do sorting in DataTable?
 ```
 
-Skrypt przeszuka bazę wektorową i wypluwa gotowy prompt.
+The script will search the vector database and generate a ready-made prompt.
 
-### 3. Skopiuj i wklej do Copilot Chat
+### 3. Copy and paste to Copilot Chat
 
-1. **Zaznacz** tekst między `===== SKOPIUJ PONIŻEJ =====`
-2. **Skopiuj** (Ctrl+C)
-3. **Otwórz GitHub Copilot Chat** w VS Code (Ctrl+Alt+I lub ikona)
-4. **Wklej** (Ctrl+V) i wyślij
+1. **Select** text between `===== COPY BELOW =====`
+2. **Copy** (Ctrl+C)
+3. **Open GitHub Copilot Chat** in VS Code (Ctrl+Alt+I or icon)
+4. **Paste** (Ctrl+V) and send
 
-Copilot otrzyma:
+Copilot receives:
 
-- 7 fragmentów dokumentacji dokładnie o tym co pytałeś
-- Surową regułę: "Używaj TYLKO tego kontekstu"
-- Twoje pytanie
+- 7 documentation fragments exactly about what you asked
+- Strict rule: "Use ONLY this context"
+- Your question
 
 ---
 
-## 🎬 Przykładowy Workflow
+## 🎬 Example Workflow
 
-### Przykład 1: Tworzenie komponentu PrimeVue
+### Example 1: Creating a PrimeVue component
 
-**Pytanie:** "Jak stworzyć DataTable z paginacją i sortowaniem?"
+**Question:** "How to create DataTable with pagination and sorting?"
 
 ```bash
 python3 generate_prompt.py
-# Wpisz pytanie
-# Skopiuj wygenerowany prompt
-# Wklej do Copilot Chat
+# Type question
+# Copy generated prompt
+# Paste to Copilot Chat
 ```
 
-**Co dostaniesz:**
+**What you'll get:**
 
-- Kod DataTable ze wszystkimi propami
-- Binding do danych
-- Konfiguracja kolumn
-- **BEZ outdated API** - bo źródłem jest Twoja aktualna dokumentacja
+- DataTable code with all props
+- Data binding
+- Column configuration
+- **NO outdated API** - because the source is your current documentation
 
-### Przykład 2: Composables w Nuxt
+### Example 2: Composables in Nuxt
 
-**Pytanie:** "Jak zrobić composable do obsługi API w Nuxt 3?"
+**Question:** "How to make a composable for API handling in Nuxt 3?"
 
 ```bash
 python3 generate_prompt_universal.py
-# Wybierz: 2 (Nuxt)
-# Wpisz pytanie
-# Skopiuj + wklej do Copilot
+# Choose: 2 (Nuxt)
+# Type question
+# Copy + paste to Copilot
 ```
 
-**Co dostaniesz:**
+**What you'll get:**
 
-- Prawidłowa struktura `/composables/useApi.ts`
-- `useFetch` vs `$fetch` - kiedy co
+- Correct `/composables/useApi.ts` structure
+- `useFetch` vs `$fetch` - when to use what
 - Auto-import
 - TypeScript types
 
 ---
 
-## ⚙️ Konfiguracja VS Code dla maksymalnej precyzji
+## ⚙️ VS Code configuration for maximum precision
 
-### Ustawienia `.vscode/settings.json` (już skonfigurowane)
+### Settings `.vscode/settings.json` (already configured)
 
 ```json
 {
   "github.copilot.advanced": {
-    "debug.overrideEngine": "gpt-4" // Lepszy model = mniej halucynacji
+    "debug.overrideEngine": "gpt-4" // Better model = less hallucination
   },
   "github.copilot.enable": {
     "*": true,
@@ -99,9 +99,9 @@ python3 generate_prompt_universal.py
 }
 ```
 
-### Dodatkowe ustawienia (opcjonalne)
+### Additional settings (optional)
 
-Jeśli chcesz jeszcze bardziej kontrolować Copilota:
+If you want even more control over Copilot:
 
 ```json
 {
@@ -112,127 +112,127 @@ Jeśli chcesz jeszcze bardziej kontrolować Copilota:
 
 ---
 
-## 📋 Zasady Anty-Halucynacyjne
+## 📋 Anti-Hallucination Rules
 
-### ✅ RÓB TAK:
+### ✅ DO THIS:
 
-1. **Zawsze używaj `generate_prompt.py` przed złożonymi pytaniami**
-   - "Jak zrobić X w PrimeVue?" → generator → Copilot
+1. **Always use `generate_prompt.py` before complex questions**
+   - "How to do X in PrimeVue?" → generator → Copilot
 
-2. **Weryfikuj odpowiedź z fragmentami kontekstu**
-   - Copilot podaje źródło (Header 1 > Header 2)
-   - Sprawdź czy to ma sens
+2. **Verify response with context fragments**
+   - Copilot provides source (Header 1 > Header 2)
+   - Check if it makes sense
 
-3. **Pytaj konkretnie**
-   - ❌ "Jak działa routing?"
-   - ✅ "Jak używać dynamicznych route params w Nuxt 3?"
+3. **Ask specifically**
+   - ❌ "How does routing work?"
+   - ✅ "How to use dynamic route params in Nuxt 3?"
 
-4. **Używaj wygenerowanego promptu jako "source of truth"**
-   - Jeśli Copilot odbiega od kontekstu → przypominasz: "Use ONLY the context provided"
+4. **Use generated prompt as "source of truth"**
+   - If Copilot deviates from context → remind: "Use ONLY the context provided"
 
-### ❌ NIE RÓB TAK:
+### ❌ DON'T DO THIS:
 
-1. **Nie pytaj Copilota na ślepo o API**
-   - Bez kontekstu może wymyślić nieistniejące props
+1. **Don't ask Copilot blindly about API**
+   - Without context it may invent non-existent props
 
-2. **Nie ufaj bezwarunkowo autouzupełnieniom**
-   - Inline suggestions mogą być z treningu, nie z dokumentacji
+2. **Don't trust autocompletions unconditionally**
+   - Inline suggestions may be from training, not documentation
 
-3. **Nie mieszaj frameworków w jednym pytaniu**
-   - Wybierz bazę (Nuxt OR PrimeVue) i trzymaj się jej
+3. **Don't mix frameworks in one question**
+   - Choose database (Nuxt OR PrimeVue) and stick to it
 
 ---
 
-## 🔧 Zaawansowane: Workflow dla większych zadań
+## 🔧 Advanced: Workflow for larger tasks
 
-### Scenariusz: Budowa CRUDa z PrimeVue
+### Scenario: Building CRUD with PrimeVue
 
-1. **Pytanie 1:** "Jak stworzyć DataTable z CRUD operations?"
-
-   ```bash
-   python3 generate_prompt_universal.py  # Obie bazy
-   ```
-
-2. **Pytanie 2:** "Jak zrobić Dialog do edycji rekordu?"
+1. **Question 1:** "How to create DataTable with CRUD operations?"
 
    ```bash
-   python3 generate_prompt.py  # Tylko PrimeVue
+   python3 generate_prompt_universal.py  # Both databases
    ```
 
-3. **Pytanie 3:** "Jak wykonać PUT request w Nuxt 3?"
+2. **Question 2:** "How to make Dialog for record editing?"
+
+   ```bash
+   python3 generate_prompt.py  # PrimeVue only
+   ```
+
+3. **Question 3:** "How to execute PUT request in Nuxt 3?"
    ```bash
    python3 generate_prompt_universal.py  # Nuxt
    ```
 
-Każde pytanie = nowy prompt → czysta separacja concerns → zero konfuzji.
+Each question = new prompt → clean separation of concerns → zero confusion.
 
 ---
 
-## 🛠️ Parametry do eksperymentowania
+## 🛠️ Parameters to experiment with
 
-### W `generate_prompt.py` możesz zmienić:
+### In `generate_prompt.py` you can change:
 
 ```python
-TOP_K = 7  # Ile fragmentów dokumentacji (3-10)
+TOP_K = 7  # How many documentation fragments (3-10)
 ```
 
-- **3-5**: Szybkie odpowiedzi, mniej kontekstu
-- **7-10**: Bardziej kompletne, dłuższe prompty
-- **Claude Sonnet**: Udźwignie nawet 15 fragmentów
+- **3-5**: Quick answers, less context
+- **7-10**: More complete, longer prompts
+- **Claude Sonnet**: Can handle even 15 fragments
 
 ---
 
-## 🎓 Dlaczego to działa?
+## 🎓 Why does this work?
 
-| Problem                   | Rozwiązanie RAG                                  |
-| ------------------------- | ------------------------------------------------ |
-| Copilot wymyśla stare API | Dostajesz aktualną dokumentację                  |
-| Copilot miesza frameworki | Wybierasz bazę (Nuxt XOR PrimeVue)               |
-| Copilot "domyśla się"     | Reguła: "NO OUTSIDE KNOWLEDGE"                   |
-| Brak źródeł               | Każdy fragment ma nagłówek (Header 1 > Header 2) |
+| Problem                  | RAG Solution                                   |
+| ------------------------ | ---------------------------------------------- |
+| Copilot invents old API  | You get current documentation                  |
+| Copilot mixes frameworks | You choose database (Nuxt XOR PrimeVue)        |
+| Copilot "guesses"        | Rule: "NO OUTSIDE KNOWLEDGE"                   |
+| No sources               | Each fragment has header (Header 1 > Header 2) |
 
 ---
 
-## 📚 Dodatkowe Materiały
+## 📚 Additional Materials
 
-- [RAG/README.md](README.md) - Jak działa indeksowanie
-- [.github/copilot-instructions.md](../.github/copilot-instructions.md) - Konwencje projektu
+- [RAG/README.md](README.md) - How indexing works
+- [.github/copilot-instructions.md](../.github/copilot-instructions.md) - Project conventions
 
 ---
 
 ## 💡 Pro Tips
 
-1. **Trzymaj terminal z `generate_prompt.py` otwarty** podczas kodowania
-   - Pytasz → Kopiujesz → Wklejasz → Kodujesz → Repeat
+1. **Keep terminal with `generate_prompt.py` open** while coding
+   - Ask → Copy → Paste → Code → Repeat
 
-2. **Zapisz często używane prompty** w pliku tekstowym
-   - `my_prompts.txt` z gotowymi kontekstami
+2. **Save frequently used prompts** in a text file
+   - `my_prompts.txt` with ready contexts
 
-3. **Używaj Claude Sonnet zamiast GPT-4 w Copilot Chat?**
-   - Sonnet jest lepszy w trzymaniu się kontekstu
-   - Ustawienia Copilot: Eksperymentuj z modelami
+3. **Use Claude Sonnet instead of GPT-4 in Copilot Chat?**
+   - Sonnet is better at sticking to context
+   - Copilot settings: Experiment with models
 
-4. **Dodaj własne reguły do promptu**
-   - Np. "Always use TypeScript strict mode"
-   - Edytuj `generate_prompt.py` → sekcja `<critical_rules>`
+4. **Add your own rules to prompt**
+   - E.g. "Always use TypeScript strict mode"
+   - Edit `generate_prompt.py` → `<critical_rules>` section
 
 ---
 
 ## 🐛 Troubleshooting
 
-### "Copilot nadal halucynuje"
+### "Copilot still hallucinates"
 
-1. Sprawdź czy skopiowałeś **cały prompt** (z `<context>`)
-2. Zwiększ `TOP_K` do 10 (więcej kontekstu)
-3. Dodaj na końcu promptu: "REMEMBER: Use ONLY the provided context. No external knowledge."
+1. Check if you copied **entire prompt** (with `<context>`)
+2. Increase `TOP_K` to 10 (more context)
+3. Add at end of prompt: "REMEMBER: Use ONLY the provided context. No external knowledge."
 
-### "Brak fragmentów dla mojego pytania"
+### "No fragments for my question"
 
-1. Twoje pytanie może być zbyt ogólne → Sprecyzuj
-2. Sprawdź czy temat jest w dokumentacji (`nuxt-llms-full.txt` / `primevue-llms-full.txt`)
-3. Zmień formulację pytania (semantyczny search jest wrażliwy na słowa kluczowe)
+1. Your question may be too general → Be more specific
+2. Check if topic is in documentation (`nuxt-llms-full.txt` / `primevue-llms-full.txt`)
+3. Change question wording (semantic search is sensitive to keywords)
 
-### "Skrypt się crashuje"
+### "Script crashes"
 
 ```bash
 pip install --upgrade langchain-community langchain-chroma sentence-transformers
@@ -240,16 +240,16 @@ pip install --upgrade langchain-community langchain-chroma sentence-transformers
 
 ---
 
-## ✅ Checklist dla każdego nowego feature
+## ✅ Checklist for each new feature
 
-- [ ] Uruchom `generate_prompt.py` z pytaniem
-- [ ] Skopiuj wygenerowany prompt
-- [ ] Wklej do Copilot Chat
-- [ ] Sprawdź czy kod używa TYLKO wzorców z kontekstu
-- [ ] Zweryfikuj cytowane źródła (Headers)
-- [ ] Przetestuj kod
+- [ ] Run `generate_prompt.py` with question
+- [ ] Copy generated prompt
+- [ ] Paste to Copilot Chat
+- [ ] Check if code uses ONLY patterns from context
+- [ ] Verify cited sources (Headers)
+- [ ] Test code
 
-**Jeśli Copilot odbiega od dokumentacji → Nowy prompt z bardziej precyzyjnym pytaniem.**
+**If Copilot deviates from documentation → New prompt with more precise question.**
 
 ---
 

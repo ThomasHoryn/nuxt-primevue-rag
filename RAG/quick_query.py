@@ -47,7 +47,7 @@ def load_vectorstore(db_name: str, embedding_function: SentenceTransformerEmbedd
         raise ValueError(f"Unknown database: {db_name}. Available: {list(DB_PATHS.keys())}")
 
     db_info = DB_PATHS[db_name]
-    print(f"📖 Ładowanie bazy: {db_info['name']}...", file=sys.stderr)
+    print(f"📖 Loading database: {db_info['name']}...", file=sys.stderr)
 
     vectorstore = Chroma(
         persist_directory=db_info['path'],
@@ -99,7 +99,7 @@ def generate_prompt(question: str, db_choice: str, embedding_function: SentenceT
     if db_choice == 'both':
         for db in ['primevue', 'nuxt']:
             vs, name = load_vectorstore(db, embedding_function)
-            print(f"🧠 Wyszukiwanie w dokumentacji {name}...", file=sys.stderr)
+            print(f"🧠 Searching in {name} documentation...", file=sys.stderr)
             docs_with_scores.extend(retrieve_with_scores(vs, question, name, k=TOP_K))
 
         # Sort by score (lower is better for distance metrics) and take top results
@@ -107,7 +107,7 @@ def generate_prompt(question: str, db_choice: str, embedding_function: SentenceT
         docs_with_scores = docs_with_scores[:TOP_K * 2]  # Keep top results from both
     else:
         vs, name = load_vectorstore(db_choice, embedding_function)
-        print(f"🧠 Wyszukiwanie w dokumentacji {name}...", file=sys.stderr)
+        print(f"🧠 Searching in {name} documentation...", file=sys.stderr)
         docs_with_scores = retrieve_with_scores(vs, question, name, k=TOP_K)
 
     # Build fragments list
@@ -140,7 +140,7 @@ def generate_prompt(question: str, db_choice: str, embedding_function: SentenceT
     context_parts = []
     for i, fragment in enumerate(all_fragments, 1):
         context_parts.append(f"Fragment {i}:")
-        context_parts.append(f"Źródło: {fragment['source']}")
+        context_parts.append(f"Source: {fragment['source']}")
         context_parts.append(fragment['content'])
         context_parts.append("")
 
@@ -148,7 +148,7 @@ def generate_prompt(question: str, db_choice: str, embedding_function: SentenceT
 
     critical_rules = """CRITICAL RULES:
 1. NO OUTSIDE KNOWLEDGE - Use ONLY information from the <context> fragments above
-2. CITATION MANDATORY - Always cite sources using "Źródło: [Framework] - [Header path]"
+2. CITATION MANDATORY - Always cite sources using "Source: [Framework] - [Header path]"
 3. COMPOSITION API - Use Vue 3 Composition API with <script setup> syntax
 4. NO HALLUCINATION - If information is not in context, say "I don't have that information in the provided context\""""
 
@@ -176,22 +176,22 @@ def interactive_mode(embedding_function: SentenceTransformerEmbeddings) -> None:
     Args:
         embedding_function: Pre-initialized embedding model
     """
-    print("\n🎯 Tryb interaktywny RAG")
+    print("\n🎯 RAG Interactive Mode")
     print("="*80)
-    print("Dostępne bazy: PrimeVue, Nuxt, Both")
-    print("Wpisz 'exit' lub 'quit' aby wyjść")
+    print("Available databases: PrimeVue, Nuxt, Both")
+    print("Type 'exit' or 'quit' to exit")
     print("="*80 + "\n")
 
     while True:
         try:
-            db_choice = input("📚 Wybierz bazę (primevue/nuxt/both): ").strip().lower()
+            db_choice = input("📚 Select database (primevue/nuxt/both): ").strip().lower()
             if db_choice in ['exit', 'quit']:
                 break
             if db_choice not in ['primevue', 'nuxt', 'both']:
-                print("❌ Nieprawidłowy wybór! Dostępne: primevue, nuxt, both")
+                print("❌ Invalid choice! Available: primevue, nuxt, both")
                 continue
 
-            question = input("🔎 Twoje pytanie: ").strip()
+            question = input("🔎 Your question: ").strip()
             if not question:
                 continue
             if question.lower() in ['exit', 'quit']:
@@ -200,16 +200,16 @@ def interactive_mode(embedding_function: SentenceTransformerEmbeddings) -> None:
             print(f"\n{'='*80}")
             prompt = generate_prompt(question, db_choice, embedding_function)
             print(f"{'='*80}")
-            print("SKOPIUJ PONIŻSZY PROMPT DO GITHUB COPILOT CHAT")
+            print("COPY THE PROMPT BELOW TO GITHUB COPILOT CHAT")
             print(f"{'='*80}\n")
             print(prompt)
             print(f"\n{'='*80}\n")
 
         except KeyboardInterrupt:
-            print("\n\nDo widzenia!")
+            print("\n\nGoodbye!")
             break
         except Exception as e:
-            print(f"❌ Błąd: {e}", file=sys.stderr)
+            print(f"❌ Error: {e}", file=sys.stderr)
 
 
 def copy_to_clipboard(text: str) -> bool:
@@ -227,10 +227,10 @@ def copy_to_clipboard(text: str) -> bool:
         pyperclip.copy(text)
         return True
     except ImportError:
-        print("⚠️  pyperclip nie jest zainstalowane. Uruchom: pip install pyperclip", file=sys.stderr)
+        print("⚠️  pyperclip is not installed. Run: pip install pyperclip", file=sys.stderr)
         return False
     except Exception as e:
-        print(f"⚠️  Nie można skopiować do schowka: {e}", file=sys.stderr)
+        print(f"⚠️  Cannot copy to clipboard: {e}", file=sys.stderr)
         return False
 
 
@@ -276,7 +276,7 @@ Examples:
     args = parser.parse_args()
 
     # Initialize embedding model once (expensive operation)
-    print("🧠 Inicjalizacja modelu embeddingowego...", file=sys.stderr)
+    print("🧠 Initializing embedding model...", file=sys.stderr)
     embedding_function = SentenceTransformerEmbeddings(model_name=EMBEDDING_MODEL_NAME)
 
     try:
@@ -289,8 +289,8 @@ Examples:
                 parser.error("question is required in CLI mode (or use --interactive)")
 
             print(f"\n{'='*80}", file=sys.stderr)
-            print(f"❓ Pytanie: {args.question}", file=sys.stderr)
-            print(f"📚 Źródło: {args.db}", file=sys.stderr)
+            print(f"❓ Question: {args.question}", file=sys.stderr)
+            print(f"📚 Source: {args.db}", file=sys.stderr)
             print(f"{'='*80}\n", file=sys.stderr)
 
             # Generate prompt
@@ -298,23 +298,23 @@ Examples:
 
             # Output prompt
             print("\n" + "="*80)
-            print("SKOPIUJ PONIŻSZY PROMPT DO GITHUB COPILOT CHAT")
+            print("COPY THE PROMPT BELOW TO GITHUB COPILOT CHAT")
             print("="*80 + "\n")
             print(prompt)
             print("\n" + "="*80)
-            print("Wklej do GitHub Copilot Chat: Ctrl+Alt+I")
+            print("Paste into GitHub Copilot Chat: Ctrl+Alt+I")
             print("="*80 + "\n")
 
             # Try to copy to clipboard
             if args.copy:
                 if copy_to_clipboard(prompt):
-                    print("✅ Skopiowano do schowka!", file=sys.stderr)
+                    print("✅ Copied to clipboard!", file=sys.stderr)
 
     except KeyboardInterrupt:
-        print("\n\nPrzerwano przez użytkownika", file=sys.stderr)
+        print("\n\nInterrupted by user", file=sys.stderr)
         sys.exit(130)
     except Exception as e:
-        print(f"\n❌ Błąd: {e}", file=sys.stderr)
+        print(f"\n❌ Error: {e}", file=sys.stderr)
         import traceback
         traceback.print_exc()
         sys.exit(1)

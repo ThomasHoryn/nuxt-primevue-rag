@@ -1,55 +1,55 @@
 # 🚀 Quick Start Guide - Automation Edition
 
-## 🎯 Cel
+## 🎯 Goal
 
-Ten przewodnik pokazuje **3 sposoby** automatyzacji RAG workflow dla maksymalnego DX (Developer Experience).
+This guide shows **3 ways** to automate the RAG workflow for maximum DX (Developer Experience).
 
-## 📦 Opcje automatyzacji
+## 📦 Automation options
 
-### 🥇 Option 1: VSCode Extension (NAJLEPSZY DX!)
+### 🥇 Option 1: VSCode Extension (BEST DX!)
 
-**Czas setup:** 5 minut
+**Setup time:** 5 minutes
 **DX Level:** 🔥🔥🔥🔥🔥 (10/10)
 
-#### Instalacja:
+#### Installation:
 
 ```bash
-# 1. Przejdź do folderu extension
+# 1. Navigate to extension folder
 cd /home/tom/development/nuxt-primevue-rag/.vscode-extension
 
-# 2. Zainstaluj dependencies
+# 2. Install dependencies
 npm install
 
-# 3. (Opcjonalnie) Zainstaluj vsce do pakowania
+# 3. (Optional) Install vsce for packaging
 npm install -g @vscode/vsce
 
-# 4. (Opcjonalnie) Spakuj extension
+# 4. (Optional) Package extension
 vsce package
 
-# 5. Zainstaluj extension
+# 5. Install extension
 code --install-extension rag-copilot-helper-1.0.0.vsix
 ```
 
-**ALBO tryb development:**
+**OR development mode:**
 
 ```bash
-# 1. Otwórz folder .vscode-extension w VSCode
+# 1. Open .vscode-extension folder in VSCode
 code /home/tom/development/nuxt-primevue-rag/.vscode-extension
 
-# 2. Naciśnij F5 - otworzy Extension Development Host
-# 3. Extension będzie aktywny w nowym oknie!
+# 2. Press F5 - opens Extension Development Host
+# 3. Extension will be active in the new window!
 ```
 
-#### Użycie:
+#### Usage:
 
-1. **Naciśnij `Ctrl+Shift+R`**
-2. Wpisz pytanie: "How to use DataTable in PrimeVue?"
-3. Wybierz źródło (Both/PrimeVue/Nuxt)
-4. ✨ **GOTOWE!** Prompt jest w edytorze + w schowku
-5. Kliknij "Open Copilot Chat" lub `Ctrl+Alt+I`
-6. Wklej (Ctrl+V) i otrzymaj kod! 🎉
+1. **Press `Ctrl+Shift+R`**
+2. Type your question: "How to use DataTable in PrimeVue?"
+3. Select source (Both/PrimeVue/Nuxt)
+4. ✨ **DONE!** Prompt is in editor + clipboard
+5. Click "Open Copilot Chat" or `Ctrl+Alt+I`
+6. Paste (Ctrl+V) and get code! 🎉
 
-**Konfiguracja** (VSCode Settings):
+**Configuration** (VSCode Settings):
 
 ```json
 {
@@ -62,45 +62,45 @@ code /home/tom/development/nuxt-primevue-rag/.vscode-extension
 
 ---
 
-### 🥈 Option 2: VSCode Tasks + Keybindings (Szybkie)
+### 🥈 Option 2: VSCode Tasks + Keybindings (Fast)
 
-**Czas setup:** 1 minuta (już skonfigurowane!)
+**Setup time:** 1 minute (already configured!)
 **DX Level:** 🔥🔥🔥🔥 (8/10)
 
-Tasks i keybindings są już w `.vscode/tasks.json` i `.vscode/keybindings.json`.
+Tasks and keybindings are already in `.vscode/tasks.json` and `.vscode/keybindings.json`.
 
-#### Użycie:
+#### Usage:
 
-**Metoda 1: Keybindings**
+**Method 1: Keybindings**
 
-- `Ctrl+Shift+R Q` - Quick Query (z promptem)
+- `Ctrl+Shift+R Q` - Quick Query (with prompt)
 - `Ctrl+Shift+R P` - Query PrimeVue
 - `Ctrl+Shift+R N` - Query Nuxt
 - `Ctrl+Shift+R B` - Query Both
 
-**Metoda 2: Command Palette**
+**Method 2: Command Palette**
 
 1. `Ctrl+Shift+P`
-2. Wpisz: "Tasks: Run Task"
-3. Wybierz: "RAG: Quick Query"
-4. Wpisz pytanie w prompt
-5. Wybierz database (primevue/nuxt/both)
+2. Type: "Tasks: Run Task"
+3. Select: "RAG: Quick Query"
+4. Type your question in the prompt
+5. Select database (primevue/nuxt/both)
 
-**Metoda 3: Terminal Menu**
+**Method 3: Terminal Menu**
 
 1. Menu: `Terminal > Run Task...`
-2. Wybierz task
+2. Select task
 
 ---
 
-### 🥉 Option 3: Python CLI Script (Programmatyczne)
+### 🥉 Option 3: Python CLI Script (Programmatic)
 
-**Czas setup:** 0 minut (już gotowe!)
+**Setup time:** 0 minutes (already ready!)
 **DX Level:** 🔥🔥🔥 (7/10)
 
-Użyj `quick_query.py` bezpośrednio z terminala.
+Use `quick_query.py` directly from terminal.
 
-#### Użycie:
+#### Usage:
 
 ```bash
 cd RAG
@@ -114,75 +114,75 @@ python3 quick_query.py "useFetch with DataTable" --db both
 # Query Nuxt only
 python3 quick_query.py "useState in Nuxt 3" --db nuxt
 
-# With auto-copy to clipboard (wymaga xclip/xsel)
+# With auto-copy to clipboard (requires xclip/xsel)
 python3 quick_query.py "Your question" --db both --copy
 ```
 
-**Parametry:**
+**Parameters:**
 
-- `question` - Twoje pytanie (wymagane)
-- `--db` - Źródło: `primevue`, `nuxt`, `both` (default: `both`)
-- `--copy` - Auto-kopiuj do schowka (wymaga `xclip` lub `xsel`)
+- `question` - Your question (required)
+- `--db` - Source: `primevue`, `nuxt`, `both` (default: `both`)
+- `--copy` - Auto-copy to clipboard (requires `xclip` or `xsel`)
 
-**Instalacja xclip (dla --copy):**
+**Install xclip (for --copy):**
 
 ```bash
 sudo apt install xclip
-# LUB
+# OR
 sudo apt install xsel
 ```
 
 ---
 
-## 📊 Porównanie metod
+## 📊 Method comparison
 
-| Metoda              | Setup | Kliknięć | Czas | DX Score         |
-| ------------------- | ----- | -------- | ---- | ---------------- |
-| VSCode Extension    | 5 min | 3        | 3s   | 🔥🔥🔥🔥🔥 10/10 |
-| Tasks + Keybindings | 0 min | 4        | 5s   | 🔥🔥🔥🔥 8/10    |
-| Python CLI          | 0 min | 0        | 2s   | 🔥🔥🔥 7/10      |
+| Method              | Setup | Clicks | Time | DX Score         |
+| ------------------- | ----- | ------ | ---- | ---------------- |
+| VSCode Extension    | 5 min | 3      | 3s   | 🔥🔥🔥🔥🔥 10/10 |
+| Tasks + Keybindings | 0 min | 4      | 5s   | 🔥🔥🔥🔥 8/10    |
+| Python CLI          | 0 min | 0      | 2s   | 🔥🔥🔥 7/10      |
 
-## 🎬 Kompletny workflow (Extension)
+## 🎬 Complete workflow (Extension)
 
 ```
-👨‍💻 Ty: "Potrzebuję DataTable z sortowaniem"
+👨‍💻 You: "I need DataTable with sorting"
       ↓ [Ctrl+Shift+R]
 🤖 Extension: "What do you want to ask?"
-      ↓ [wpisujesz pytanie]
+      ↓ [type your question]
 🤖 Extension: "Select documentation source"
-      ↓ [wybierasz "Both"]
-📚 RAG: [ładuje bazy, szuka fragmentów]
-      ↓ [1-2 sekundy]
-📝 VSCode: [otwiera prompt w edytorze]
-📋 Clipboard: [prompt już skopiowany]
-      ↓ [klikasz "Open Copilot Chat"]
-💬 Copilot Chat: [otwiera się]
-      ↓ [Ctrl+V wklejasz]
-🧠 Copilot: [analizuje 7-14 fragmentów]
-      ↓ [2-3 sekundy]
-✅ Copilot: [generuje kod ZERO halucynacji]
-      ↓ [kopiujesz kod]
-🎉 DONE! Feature gotowy!
+      ↓ [select "Both"]
+📚 RAG: [loads databases, searches fragments]
+      ↓ [1-2 seconds]
+📝 VSCode: [opens prompt in editor]
+📋 Clipboard: [prompt already copied]
+      ↓ [click "Open Copilot Chat"]
+💬 Copilot Chat: [opens]
+      ↓ [Ctrl+V to paste]
+🧠 Copilot: [analyzes 7-14 fragments]
+      ↓ [2-3 seconds]
+✅ Copilot: [generates code ZERO hallucination]
+      ↓ [copy code]
+🎉 DONE! Feature ready!
 ```
 
-**Total time: < 10 sekund od pomysłu do kodu! ⚡**
+**Total time: < 10 seconds from idea to code! ⚡**
 
 ## 🔥 Pro Tips
 
-### Tip 1: Używaj Extension w trybie development
+### Tip 1: Use Extension in development mode
 
-Jeśli chcesz modyfikować extension:
+If you want to modify the extension:
 
 ```bash
 cd .vscode-extension
 code .
-# Naciśnij F5 - otwiera Extension Development Host
-# Możesz debugować i live-reload zmian!
+# Press F5 - opens Extension Development Host
+# You can debug and live-reload changes!
 ```
 
-### Tip 2: Aliasy dla CLI
+### Tip 2: Aliases for CLI
 
-Dodaj do `~/.bashrc` lub `~/.zshrc`:
+Add to `~/.bashrc` or `~/.zshrc`:
 
 ```bash
 alias rag='python3 /home/tom/development/nuxt-primevue-rag/RAG/quick_query.py'
@@ -191,7 +191,7 @@ alias ragn='rag --db nuxt'
 alias ragb='rag --db both'
 ```
 
-Użycie:
+Usage:
 
 ```bash
 ragp "How to use DataTable?"
@@ -199,21 +199,21 @@ ragn "useState in Nuxt 3"
 ragb "useFetch with DataTable"
 ```
 
-### Tip 3: VS Code Task w terminalu
+### Tip 3: VS Code Task in terminal
 
 ```bash
-# Szybki dostęp przez VSCode integrated terminal
-# Już skonfigurowane keybindings!
+# Quick access through VSCode integrated terminal
+# Keybindings already configured!
 ```
 
 ### Tip 4: Keybindings customization
 
-Edytuj `.vscode/keybindings.json` aby zmienić skróty:
+Edit `.vscode/keybindings.json` to change shortcuts:
 
 ```json
 [
   {
-    "key": "ctrl+space ctrl+space", // Twój custom shortcut
+    "key": "ctrl+space ctrl+space", // Your custom shortcut
     "command": "rag-copilot.query"
   }
 ]
@@ -221,47 +221,47 @@ Edytuj `.vscode/keybindings.json` aby zmienić skróty:
 
 ## 🐛 Troubleshooting
 
-### Extension nie działa
+### Extension not working
 
 ```bash
-# 1. Sprawdź czy Python działa
+# 1. Check if Python works
 python3 --version
 
-# 2. Sprawdź czy RAG/quick_query.py działa
+# 2. Check if RAG/quick_query.py works
 cd RAG
 python3 quick_query.py "test" --db primevue
 
-# 3. Sprawdź VSCode Output
+# 3. Check VSCode Output
 # View > Output > Select "RAG Copilot Helper"
 ```
 
-### Tasks nie działają
+### Tasks not working
 
 ```bash
-# Sprawdź czy jesteś w workspace folder
-# Tasks wymagają otwartego folderu workspace!
+# Check if you're in workspace folder
+# Tasks require an open workspace folder!
 ```
 
-### Clipboard nie działa (--copy)
+### Clipboard not working (--copy)
 
 ```bash
-# Zainstaluj xclip
+# Install xclip
 sudo apt install xclip
 
-# ALBO xsel
+# OR xsel
 sudo apt install xsel
 ```
 
-## 📚 Następne kroki
+## 📚 Next steps
 
-1. ✅ **Wypróbuj Extension** - najlepszy DX!
-2. 📖 Przeczytaj [USAGE.md](../RAG/USAGE.md) - pełna dokumentacja
-3. 🧪 Zobacz [EXAMPLE_QUESTIONS.md](../RAG/EXAMPLE_QUESTIONS.md) - 50+ przykładów
-4. 🔧 Customizuj settings według preferencji
-5. 🚀 Build amazing apps z zero halucynacji!
+1. ✅ **Try Extension** - best DX!
+2. 📖 Read [USAGE.md](../RAG/USAGE.md) - full documentation
+3. 🧪 See [EXAMPLE_QUESTIONS.md](../RAG/EXAMPLE_QUESTIONS.md) - 50+ examples
+4. 🔧 Customize settings according to preferences
+5. 🚀 Build amazing apps with zero hallucination!
 
 ---
 
-**Pytania? Issues? → [GitHub Repository](https://github.com/ThomasHoryn/nuxt-primevue-rag)**
+**Questions? Issues? → [GitHub Repository](https://github.com/ThomasHoryn/nuxt-primevue-rag)**
 
 🎉 **Happy coding without hallucinations!**

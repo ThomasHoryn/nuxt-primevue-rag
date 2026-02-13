@@ -1,39 +1,39 @@
-# 📋 Przykładowe pytania do testowania systemu RAG
+# 📋 Example Questions for Testing RAG System
 
-## PrimeVue - Komponenty
+## PrimeVue - Components
 
 ### DataTable
 
-- "Jak zrobić sortowanie w DataTable?"
-- "Jak dodać paginację do DataTable w PrimeVue?"
-- "Jak customizować kolumny w DataTable?"
-- "Jak zrobić filtry w DataTable?"
-- "Jak obsłużyć selection w DataTable?"
+- "How to do sorting in DataTable?"
+- "How to add pagination to DataTable in PrimeVue?"
+- "How to customize columns in DataTable?"
+- "How to make filters in DataTable?"
+- "How to handle selection in DataTable?"
 
 ### Dialog/Modal
 
-- "Jak stworzyć Dialog w PrimeVue?"
-- "Jak przekazać dane do Dialog w PrimeVue?"
-- "Jak obsłużyć zamknięcie Dialog?"
+- "How to create Dialog in PrimeVue?"
+- "How to pass data to Dialog in PrimeVue?"
+- "How to handle Dialog closing?"
 
 ### Form Components
 
-- "Jak używać InputText w PrimeVue?"
-- "Jak zrobić walidację formularza z PrimeVue?"
-- "Jak używać Dropdown w PrimeVue?"
-- "Jak użyć Calendar do wyboru daty?"
+- "How to use InputText in PrimeVue?"
+- "How to do form validation with PrimeVue?"
+- "How to use Dropdown in PrimeVue?"
+- "How to use Calendar for date selection?"
 
 ### Toast/Messages
 
-- "Jak pokazać toast notification w PrimeVue?"
-- "Jak używać Toast service w PrimeVue?"
-- "Jak dodać Message do komponentu?"
+- "How to show toast notification in PrimeVue?"
+- "How to use Toast service in PrimeVue?"
+- "How to add Message to component?"
 
 ### Styling
 
-- "Jak customizować theme w PrimeVue?"
-- "Jak używać Tailwind z PrimeVue?"
-- "Jak stylować komponenty PrimeVue?"
+- "How to customize theme in PrimeVue?"
+- "How to use Tailwind with PrimeVue?"
+- "How to style PrimeVue components?"
 
 ---
 
@@ -41,142 +41,181 @@
 
 ### Routing
 
-- "Jak działają dynamic routes w Nuxt 3?"
-- "Jak używać route params w Nuxt 3?"
-- "Jak zrobić nested routes w Nuxt 3?"
-- "Jak używać middleware w Nuxt 3?"
+- "How do dynamic routes work in Nuxt 3?"
+- "How to use route params in Nuxt 3?"
+- "How to make nested routes in Nuxt 3?"
+- "How to use middleware in Nuxt 3?"
 
 ### Data Fetching
 
-- "Jak używać useFetch w Nuxt 3?"
-- "Jaka jest różnica między useFetch a $fetch w Nuxt 3?"
-- "Jak obsługiwać błędy w useFetch?"
-- "Jak zrobić server-side fetching w Nuxt 3?"
+- "How to use useFetch in Nuxt 3?"
+- "What is the difference between useFetch and $fetch in Nuxt 3?"
+- "How to handle errors in useFetch?"
+- "How to do server-side fetching in Nuxt 3?"
 
 ### Composables
 
-- "Jak stworzyć composable w Nuxt 3?"
-- "Jak używać useState w Nuxt 3?"
-- "Jak zrobić shared state w Nuxt 3?"
-- "Gdzie umieścić composables w Nuxt 3?"
+- "How to create composable in Nuxt 3?"
+- "How to use useState in Nuxt 3?"
+- "How to make shared state in Nuxt 3?"
+- "Where to place composables in Nuxt 3?"
 
 ### Server
 
-- "Jak stworzyć API endpoint w Nuxt 3?"
-- "Jak używać server routes w Nuxt 3?"
-- "Jak obsłużyć POST request w Nuxt server?"
+- "How to create API endpoint in Nuxt 3?"
+- "How to use server routes in Nuxt 3?"
+- "How to handle POST request in Nuxt server?"
 
 ### Configuration
 
-- "Jak skonfigurować Nuxt 3?"
-- "Jak dodać moduły do Nuxt 3?"
-- "Jak używać runtime config w Nuxt 3?"
-- "Jak skonfigurować TypeScript w Nuxt 3?"
+- "How to configure Nuxt 3?"
+- "How to add modules to Nuxt 3?"
+- "How to use runtime config in Nuxt 3?"
+- "How to configure TypeScript in Nuxt 3?"
 
 ### Components
 
-- "Jak działają auto-imports w Nuxt 3?"
-- "Jak zrobić layout w Nuxt 3?"
-- "Jak używać pages w Nuxt 3?"
+- "How do auto-imports work in Nuxt 3?"
+- "How to make layout in Nuxt 3?"
+- "How to use pages in Nuxt 3?"
 
 ---
 
-## Kombinowane (Nuxt + PrimeVue)
+## Combined (Nuxt + PrimeVue)
 
 ### Integration
 
-- "Jak zintegrować PrimeVue z Nuxt 3?"
-- "Jak używać PrimeVue components w Nuxt 3?"
-- "Jak skonfigurować PrimeVue w nuxt.config?"
+- "How to integrate PrimeVue with Nuxt 3?"
+- "How to use PrimeVue components in Nuxt 3?"
+- "How to configure PrimeVue in nuxt.config?"
 
 ### CRUD Operations
 
-- "Jak zrobić CRUD z DataTable w Nuxt 3?"
-- "Jak obsłużyć formularz edycji w Nuxt z PrimeVue?"
-- "Jak połączyć useFetch z DataTable w PrimeVue?"
+- "How to make CRUD with DataTable in Nuxt 3?"
+- "How to handle edit form in Nuxt with PrimeVue?"
+- "How to connect useFetch with DataTable in PrimeVue?"
 
 ### State Management
 
-- "Jak zarządzać stanem formularza z PrimeVue w Nuxt 3?"
-- "Jak używać useState z PrimeVue components?"
+- "How to manage form state with PrimeVue in Nuxt 3?"
+- "How to share state between PrimeVue components in Nuxt?"
+
+### Real-world Scenarios
+
+- "How to build user management table with DataTable + useFetch?"
+- "How to create product catalog with PrimeVue + Nuxt 3?"
+- "How to implement authentication flow with PrimeVue Dialog + Nuxt composables?"
 
 ---
 
-## Testowanie systemu
+## Advanced Questions
 
-### Krok po kroku
+### Performance
 
-1. **Wybierz pytanie z listy powyżej**
+- "How to optimize DataTable performance with large datasets?"
+- "How to implement virtual scrolling in PrimeVue?"
+- "How to lazy load data in DataTable?"
 
-2. **Uruchom generator:**
+### Error Handling
 
-   ```bash
-   cd RAG
-   python3 generate_prompt_universal.py
-   ```
+- "How to handle API errors in Nuxt 3 with Toast notifications?"
+- "How to show loading state in DataTable while fetching?"
+- "How to implement retry logic with useFetch?"
 
-3. **Wybierz bazę:**
-   - `1` dla pytań o PrimeVue
-   - `2` dla pytań o Nuxt
-   - `3` dla pytań kombinowanych
+### TypeScript
 
-4. **Wklej pytanie i naciśnij Enter**
+- "How to type PrimeVue components in TypeScript?"
+- "How to type Nuxt 3 composables with TypeScript?"
+- "How to type useFetch return value?"
 
-5. **Skopiuj wygenerowany prompt**
+### Testing
 
-6. **Wklej do GitHub Copilot Chat w VS Code**
-
-7. **Porównaj odpowiedź z fragmentami kontekstu w prompcie**
-
----
-
-## Własne pytania - Zasady
-
-### ✅ Dobre pytania (specyficzne):
-
-- "Jak używać composable useAsyncData w Nuxt 3?"
-- "Jak customizować kolory w PrimeVue DataTable?"
-- "Jak obsłużyć error state w useFetch Nuxt 3?"
-
-### ❌ Złe pytania (zbyt ogólne):
-
-- "Jak działa Nuxt?"
-- "Co to jest PrimeVue?"
-- "Jak robić aplikacje?"
-
-### 💡 Wskazówki:
-
-- Używaj nazw komponentów/API z dokumentacji
-- Pytaj o konkretne przypadki użycia
-- Jeśli pytanie jest szerokie, podziel je na mniejsze
+- "How to test PrimeVue Dialog component?"
+- "How to test Nuxt composables?"
+- "How to mock useFetch in tests?"
 
 ---
 
-## Benchmark - Sprawdź czy system działa
+## Tips for Asking Questions
 
-Przetestuj te 3 pytania i sprawdź czy odpowiedzi:
+### ✅ Good Questions (Specific)
 
-1. ✅ Cytują źródła (Headers)
-2. ✅ Używają tylko wiedzy z kontekstu
-3. ✅ Nie wymyślają nieistniejących API
+- "How to enable row selection in PrimeVue DataTable **with checkbox column**?"
+- "How to use **useFetch** for GET request in Nuxt 3 **with query parameters**?"
+- "How to customize **Dialog header** in PrimeVue?"
 
-### Test 1: PrimeVue DataTable
+### ❌ Bad Questions (Too General)
 
-**Pytanie:** "Jak zrobić sortowanie w DataTable?"
-**Oczekiwane:** Kod z propem `sortable`, przykład użycia
+- "How to use DataTable?" (which aspect?)
+- "How does Nuxt work?" (too broad)
+- "How to fetch data?" (which method?)
 
-### Test 2: Nuxt useFetch
+### 🎯 Question Formula
 
-**Pytanie:** "Jaka jest różnica między useFetch a $fetch?"
-**Oczekiwane:** Wyjaśnienie SSR vs client-side
+```
+How to [action] in [framework] [specific context/constraint]?
+```
 
-### Test 3: Kombinowane
+Examples:
 
-**Pytanie:** "Jak połączyć Nuxt 3 composable z PrimeVue DataTable?"
-**Oczekiwane:** Przykład użycia `useFetch` + `DataTable`
-
-Jeśli wszystkie 3 testy przechodzą → System działa poprawnie! 🎉
+- "How to **create dynamic routes** in **Nuxt 3** with **route parameters**?"
+- "How to **handle form submission** in **PrimeVue** with **validation**?"
+- "How to **implement pagination** in **DataTable** with **server-side data**?"
 
 ---
 
-Made with 🧠 + RAG
+## Testing Workflow
+
+### Test 1: Simple Component
+
+```bash
+python3 generate_prompt.py
+```
+
+Question: "How to create Button in PrimeVue?"
+Expected: Basic Button code with props
+
+### Test 2: Complex Component
+
+```bash
+python3 generate_prompt.py
+```
+
+Question: "How to create DataTable with pagination, sorting and filters?"
+Expected: Complete DataTable setup with all features
+
+### Test 3: Framework Integration
+
+```bash
+python3 generate_prompt_universal.py
+```
+
+Choose: `3` (Both)
+Question: "How to use useFetch with DataTable in Nuxt 3?"
+Expected: Composable + DataTable integration code
+
+### Test 4: Edge Case
+
+```bash
+python3 generate_prompt.py
+```
+
+Question: "How to customize DataTable empty message?"
+Expected: Specific template slot documentation
+
+---
+
+## Success Criteria
+
+When testing questions, verify:
+
+- ✅ Copilot **cites sources** (Header 1 > Header 2)
+- ✅ Code uses **only APIs from context**
+- ✅ No **invented props** or methods
+- ✅ Code is **syntactically correct**
+- ✅ Follows **Composition API** (not Options API)
+- ✅ Uses **TypeScript** if applicable
+
+---
+
+Made with 🧠 + ChromaDB + 💚 Nuxt/PrimeVue

@@ -1,87 +1,87 @@
-# GitHub Copilot Instructions - RAG System dla Nuxt & PrimeVue
+# GitHub Copilot Instructions - RAG System for Nuxt & PrimeVue
 
-## Kontekst projektu
+## Project Context
 
-To jest system RAG (Retrieval-Augmented Generation) do wyszukiwania informacji w dokumentacji Nuxt.js i PrimeVue przy użyciu bazy wektorowej ChromaDB.
+This is a RAG (Retrieval-Augmented Generation) system for searching information in Nuxt.js and PrimeVue documentation using the ChromaDB vector database.
 
-## Stack technologiczny
+## Technology Stack
 
 ### Backend (Python)
 
-- **LangChain** - framework do budowy aplikacji LLM
-- **ChromaDB** - baza wektorowa do przechowywania embeddingów
-- **Sentence Transformers** - model `all-MiniLM-L6-v2` do generowania embeddingów
-- **FastAPI** (planowane) - API REST
+- **LangChain** - framework for building LLM applications
+- **ChromaDB** - vector database for storing embeddings
+- **Sentence Transformers** - `all-MiniLM-L6-v2` model for generating embeddings
+- **FastAPI** (planned) - REST API
 
-### Frontend (planowany)
+### Frontend (planned)
 
-- **Nuxt 3** - framework Vue.js
-- **PrimeVue** - biblioteka komponentów UI
+- **Nuxt 3** - Vue.js framework
+- **PrimeVue** - UI component library
 - **TypeScript**
 
-## Struktura projektu
+## Project Structure
 
 ```
 nuxt-primevue-rag/
 ├── .github/
 │   └── copilot-instructions.md
 ├── RAG/
-│   ├── index_db.py              # Indeksowanie dokumentów
-│   ├── generate_prompt.py       # Generator promptów (PrimeVue)
-│   ├── generate_prompt_universal.py  # Generator promptów (Universal)
+│   ├── index_db.py              # Document indexing
+│   ├── quick_query.py           # CLI query tool
+│   ├── config.py                # Configuration
 │   ├── QUICKSTART.md            # Quick start guide
-│   ├── USAGE.md                 # Pełna dokumentacja użycia
-│   ├── EXAMPLE_QUESTIONS.md     # Przykładowe pytania
-│   ├── nuxt-llms-full.txt       # Dokumentacja Nuxt
-│   ├── primevue-llms-full.txt   # Dokumentacja PrimeVue
-│   ├── chroma_db_nuxt/          # Baza wektorowa Nuxt
-│   ├── chroma_db_primevue/      # Baza wektorowa PrimeVue
+│   ├── USAGE.md                 # Full usage documentation
+│   ├── EXAMPLE_QUESTIONS.md     # Example questions
+│   ├── nuxt-llms-full.txt       # Nuxt documentation
+│   ├── primevue-llms-full.txt   # PrimeVue documentation
+│   ├── chroma_db_nuxt/          # Nuxt vector database
+│   ├── chroma_db_primevue/      # PrimeVue vector database
 │   ├── requirements.txt
 │   └── README.md
 ```
 
-## 🎯 RAG-Copilot Workflow (ZERO HALUCYNACJI)
+## 🎯 RAG-Copilot Workflow (ZERO HALLUCINATION)
 
-### Filozofia
+### Philosophy
 
-Zamiast pozwalać Copilotowi wymyślać kod, **karmisz go fragmentami dokumentacji** przed każdym pytaniem.
+Instead of letting Copilot make up code, **you feed it documentation fragments** before each question.
 
 ### Workflow:
 
-1. Uruchom `python3 generate_prompt_universal.py`
-2. Zadaj pytanie (np. "Jak zrobić DataTable w PrimeVue?")
-3. Skopiuj wygenerowany prompt (zawiera fragmenty dokumentacji)
-4. Wklej do GitHub Copilot Chat w VS Code
-5. Copilot odpowiada TYLKO na podstawie dostarczonych fragmentów
+1. Run `python3 quick_query.py "Your question" --db both`
+2. Ask question (e.g. "How to create DataTable in PrimeVue?")
+3. Copy generated prompt (contains documentation fragments)
+4. Paste to GitHub Copilot Chat in VS Code
+5. Copilot responds ONLY based on provided fragments
 
-### Critical Rules dla promptów:
+### Critical Rules for prompts:
 
 ```
-1. NO OUTSIDE KNOWLEDGE - używaj tylko kontekstu
-2. CITATION MANDATORY - cytuj źródła (Headers)
-3. COMPOSITION API - używaj <script setup>
-4. NO HALLUCINATION - zero wymyślania API
+1. NO OUTSIDE KNOWLEDGE - use only context
+2. CITATION MANDATORY - cite sources (Headers)
+3. COMPOSITION API - use <script setup>
+4. NO HALLUCINATION - zero API invention
 ```
 
-### Gdy używasz tego systemu jako Copilot:
+### When using this system as Copilot:
 
-- ✅ Analizuj **tylko** fragmenty w `<context>`
-- ✅ Cytuj źródła: "Źródło: Header 1 > Header 2"
-- ✅ Używaj wzorców kodu dokładnie jak w dokumentacji
-- ❌ NIE wymyślaj API które nie są w kontekście
-- ❌ NIE używaj wiedzy spoza dostarczonych fragmentów
+- ✅ Analyze **only** fragments in `<context>`
+- ✅ Cite sources: "Source: Header 1 > Header 2"
+- ✅ Use code patterns exactly as in documentation
+- ❌ DO NOT invent APIs that are not in context
+- ❌ DO NOT use knowledge from outside provided fragments
 
-## Konwencje kodowania
+## Coding Conventions
 
 ### Python
 
 - **Style**: PEP 8
-- **Naming**: snake_case dla funkcji i zmiennych
+- **Naming**: snake_case for functions and variables
 - **Docstrings**: Google style
-- **Type hints**: używaj wszędzie gdzie możliwe
-- **Imports**: grupuj w kolejności: stdlib, third-party, local
+- **Type hints**: use everywhere possible
+- **Imports**: group in order: stdlib, third-party, local
 
-### Przykład kodu Python:
+### Python Code Example:
 
 ```python
 from typing import List, Dict
@@ -90,70 +90,69 @@ from langchain_community.embeddings import SentenceTransformerEmbeddings
 
 def retrieve_documents(query: str, k: int = 5) -> List[Dict]:
     """
-    Wyszukuje najbardziej podobne dokumenty do zapytania.
+    Searches for documents most similar to the query.
 
     Args:
-        query: Pytanie użytkownika
-        k: Liczba dokumentów do zwrócenia
+        query: User question
+        k: Number of documents to return
 
     Returns:
-        Lista dokumentów z metadanymi
+        List of documents with metadata
     """
     pass
 ```
 
-### TypeScript/Vue (gdy będzie frontend)
+### TypeScript/Vue (when frontend is built)
 
 - **Style**: Standard Vue 3 + Composition API
-- **Naming**: camelCase dla zmiennych, PascalCase dla komponentów
+- **Naming**: camelCase for variables, PascalCase for components
 - **Components**: Single File Components (.vue)
-- **Composables**: prefix `use` (np. `useRAGQuery`)
+- **Composables**: prefix `use` (e.g. `useRAGQuery`)
 
-## Kluczowe parametry projektu
+## Key Project Parameters
 
-### Chunking dokumentów
-
-```python
-chunk_size = 1000        # Rozmiar fragmentu tekstu
-chunk_overlap = 200      # Nakładanie między fragmentami
-```
-
-### Wyszukiwanie
+### Document Chunking
 
 ```python
-k = 5                    # Liczba zwracanych dokumentów
-model = "all-MiniLM-L6-v2"  # Model embeddingowy
+chunk_size = 1000        # Text fragment size
+chunk_overlap = 200      # Overlap between fragments
 ```
 
-## Wskazówki dla Copilot
+### Search
 
-1. **Obsługa błędów**: Zawsze dodawaj try-except dla operacji I/O i połączeń z bazą
-2. **Logowanie**: Używaj emoji w printach dla lepszej czytelności (📖, 🧠, ✅, ❌)
-3. **Komentarze**: Używaj polskich komentarzy dla spójności z resztą kodu
-4. **Embeddingi**: Pamiętaj o cache'owaniu modelu embeddingowego
-5. **Chunking**: Zawsze zachowuj kontekst nagłówków Markdown
-6. **Metadane**: Dodawaj źródło dokumentu (nuxt/primevue) do każdego fragmentu
+```python
+k = 7                    # Number of returned documents (configurable in config.py)
+model = "all-MiniLM-L6-v2"  # Embedding model
+```
 
-## Status funkcjonalności
+## Guidelines for Copilot
 
-- [x] Indeksowanie dokumentacji (index_db.py)
-- [x] Generator promptów dla pojedynczej bazy (generate_prompt.py)
-- [x] Universal generator dla wielu baz (generate_prompt_universal.py)
-- [x] Python CLI wrapper (quick_query.py)
+1. **Error Handling**: Always add try-except for I/O operations and database connections
+2. **Logging**: Use emojis in prints for better readability (📖, 🧠, ✅, ❌)
+3. **Comments**: Use English comments for consistency
+4. **Embeddings**: Remember to cache the embedding model
+5. **Chunking**: Always preserve context of Markdown headers
+6. **Metadata**: Add document source (nuxt/primevue) to each fragment
+
+## Functionality Status
+
+- [x] Documentation indexing (index_db.py)
+- [x] Unified CLI tool (quick_query.py)
+- [x] Configuration management (config.py)
 - [x] VSCode Extension (rag-copilot-helper)
 - [x] VSCode Tasks + Keybindings
-- [x] Dokumentacja użycia (QUICKSTART.md, USAGE.md, EXAMPLE_QUESTIONS.md, AUTOMATION.md)
-- [x] Konfiguracja VSCode dla Copilot
-- [ ] FastAPI backend z endpointem /api/query
-- [ ] Frontend w Nuxt 3 z interfejsem czatu
-- [ ] System cache'owania często zadawanych pytań
+- [x] Usage documentation (QUICKSTART.md, USAGE.md, EXAMPLE_QUESTIONS.md, AUTOMATION.md)
+- [x] VSCode configuration for Copilot
+- [ ] FastAPI backend with /api/query endpoint
+- [ ] Nuxt 3 frontend with chat interface
+- [ ] Caching system for frequently asked questions
 - [ ] Deployment (Docker)
 
-## 🚀 Narzędzia automatyzacji
+## 🚀 Automation Tools
 
 ### VSCode Extension (Recommended)
 
-**Najlepszy DX:** One-click RAG queries bezpośrednio w VS Code!
+**Best DX:** One-click RAG queries directly in VS Code!
 
 ```bash
 cd .vscode-extension
@@ -161,7 +160,7 @@ npm install
 code --install-extension rag-copilot-helper-*.vsix
 ```
 
-**Użycie:** `Ctrl+Shift+R` → pytanie → DONE!
+**Usage:** `Ctrl+Shift+R` → question → DONE!
 
 ### Python CLI
 
@@ -176,25 +175,25 @@ python3 RAG/quick_query.py "Your question" --db both --copy
 - `Ctrl+Shift+R N` - Query Nuxt
 - `Ctrl+Shift+R B` - Query Both
 
-Pełna dokumentacja: [AUTOMATION.md](../AUTOMATION.md)
+Full documentation: [AUTOMATION.md](../AUTOMATION.md)
 
-## Przykładowe zapytania do systemu RAG
+## Example RAG System Queries
 
-- "Jak używać composables w Nuxt 3?"
-- "Jak skonfigurować DataTable w PrimeVue?"
-- "Jaka jest różnica między pages i components w Nuxt?"
-- "Jak stylować komponenty PrimeVue?"
+- "How to use composables in Nuxt 3?"
+- "How to configure DataTable in PrimeVue?"
+- "What is the difference between pages and components in Nuxt?"
+- "How to style PrimeVue components?"
 
-## Dane źródłowe
+## Source Data
 
-- `nuxt-llms-full.txt` - 2.8 MB - pełna dokumentacja Nuxt
-- `primevue-llms-full.txt` - 1.8 MB - pełna dokumentacja PrimeVue
+- `nuxt-llms-full.txt` - 2.8 MB - full Nuxt documentation
+- `primevue-llms-full.txt` - 1.8 MB - full PrimeVue documentation
 
-Dokumenty są w formacie Markdown z nagłówkami strukturyzującymi treść.
+Documents are in Markdown format with headers structuring the content.
 
-## Uwagi dotyczące wydajności
+## Performance Notes
 
-- Model embeddingowy (~90MB) jest cache'owany po pierwszym użyciu
-- Pierwsza indeksacja może trwać 1-2 minuty
-- Zapytania do bazy są szybkie (~100-200ms)
-- Baza wektorowa zajmuje łącznie ~61MB
+- Embedding model (~90MB) is cached after first use
+- First indexing may take 1-2 minutes
+- Database queries are fast (~100-200ms)
+- Vector database takes ~61MB total

@@ -1,242 +1,202 @@
-# 🎬 Quick Start Guide - Krok po kroku
+# 🎬 Quick Start Guide - Step by Step
 
-## 🎯 Cel
+## 🎯 Goal
 
-Nauczyć GitHub Copilot używać **wyłącznie** dokumentacji Nuxt i PrimeVue z Twojej bazy wektorowej, bez halucynacji.
+Teach GitHub Copilot to use **exclusively** Nuxt and PrimeVue documentation from your vector database, without hallucinations.
 
 ---
 
-## ⚡ Szybki start (5 minut)
+## ⚡ Quick start (5 minutes)
 
-### 1. Upewnij się że bazy są zaindeksowane
+### 1. Make sure the databases are indexed
 
 ```bash
 ls -la RAG/chroma_db_*
 ```
 
-Powinny być 2 katalogi:
+There should be 2 directories:
 
 - `chroma_db_nuxt/` (37MB)
 - `chroma_db_primevue/` (24MB)
 
-Jeśli ich nie ma, uruchom:
+If they don't exist, run:
 
 ```bash
 cd RAG
 python3 index_db.py
 ```
 
-### 2. Test prostego zapytania
+### 2. Test a simple query
 
 ```bash
 cd RAG
 python3 generate_prompt.py
 ```
 
-Gdy pyta "O co chcesz zapytać?", wpisz:
+When asked "What do you want to ask?", type:
 
 ```
-Jak zrobić sortowanie w DataTable?
+How to do sorting in DataTable?
 ```
 
-Powinien wyświetlić długi prompt z fragmentami dokumentacji.
+It should display a long prompt with documentation fragments.
 
-### 3. Skopiuj i wklej do Copilot Chat
+### 3. Copy and paste to Copilot Chat
 
-1. **Zaznacz** tekst między liniami:
+1. **Select** text between the lines:
 
    ```
-   ================ SKOPIUJ PONIŻEJ ================
+   ================ COPY BELOW ================
    ...
-   ================ KONIEC KOPIOWANIA ================
+   ================ END COPY ================
    ```
 
-2. **Skopiuj** (Ctrl+C / Cmd+C)
+2. **Copy** (Ctrl+C / Cmd+C)
 
-3. **Otwórz GitHub Copilot Chat** w VS Code:
-   - Klawisz: `Ctrl+Alt+I` (Linux/Win) lub `Cmd+Alt+I` (Mac)
-   - Lub: Ikona Copilot w pasku bocznym → Chat
+3. **Open GitHub Copilot Chat** in VS Code:
+   - Keyboard: `Ctrl+Alt+I` (Linux/Win) or `Cmd+Alt+I` (Mac)
+   - Or: Copilot icon in sidebar → Chat
 
-4. **Wklej** (Ctrl+V) i wyślij Enter
+4. **Paste** (Ctrl+V) and press Enter
 
-5. **Sprawdź odpowiedź:**
-   - ✅ Cytuje źródła (np. "DataTable > Sortable Mode")
-   - ✅ Kod używa propów z dokumentacji
-   - ✅ NIE wymyśla nieistniejących API
+5. **Check response:**
+   - ✅ Cites sources (e.g. "DataTable > Sortable Mode")
+   - ✅ Code uses props from documentation
+   - ✅ DOES NOT invent non-existent APIs
 
 ---
 
-## 📋 Przykład kompletnego workflow
+## 📋 Complete workflow example
 
-### Scenariusz: Chcesz zrobić CRUD z PrimeVue
+### Scenario: You want to build CRUD with PrimeVue
 
-#### Krok 1: DataTable
+#### Step 1: DataTable
 
 ```bash
 python3 generate_prompt.py
 ```
 
-Pytanie: "Jak stworzyć DataTable z paginacją i sortowaniem?"
-→ Skopiuj → Wklej do Copilot → Otrzymasz kod DataTable
+Question: "How to create DataTable with pagination and sorting?"
+→ Copy → Paste to Copilot → You'll get DataTable code
 
-#### Krok 2: Dialog do edycji
+#### Step 2: Edit Dialog
 
 ```bash
 python3 generate_prompt.py
 ```
 
-Pytanie: "Jak stworzyć Dialog do edycji rekordu w PrimeVue?"
-→ Skopiuj → Wklej do Copilot → Otrzymasz kod Dialog
+Question: "How to create Dialog for record editing in PrimeVue?"
+→ Copy → Paste to Copilot → You'll get Dialog code
 
-#### Krok 3: API w Nuxt
+#### Step 3: API in Nuxt
 
 ```bash
 python3 generate_prompt_universal.py
 ```
 
-Wybierz: `2` (Nuxt)
-Pytanie: "Jak wykonać PUT request w Nuxt 3?"
-→ Skopiuj → Wklej do Copilot → Otrzymasz composable z useFetch
+Choose: `2` (Nuxt)
+Question: "How to execute PUT request in Nuxt 3?"
+→ Copy → Paste to Copilot → You'll get composable with useFetch
 
 ---
 
-## 🔧 Opcje zaawansowane
+## 🔥 Advanced Tips
 
-### Użyj universal generator (obie bazy)
+### Tip 1: Use universal generator for multi-framework questions
 
 ```bash
 python3 generate_prompt_universal.py
 ```
 
-Wybierz opcję:
+- Option `1`: PrimeVue only
+- Option `2`: Nuxt only
+- Option `3`: Both (7 fragments each = 14 total)
 
-- `1` - Tylko PrimeVue
-- `2` - Tylko Nuxt
-- `3` - Obie bazy (dla pytań kombinowanych)
+### Tip 2: Increase number of fragments for complex questions
 
-### Zmień ilość fragmentów kontekstu
-
-Edytuj `generate_prompt.py`:
+Edit `generate_prompt.py`:
 
 ```python
-TOP_K = 10  # Zwiększ z 7 do 10 dla większego kontekstu
+TOP_K = 10  # Default: 7
 ```
 
-**Uwaga:** Więcej fragmentów = dłuższy prompt, ale dokładniejsze odpowiedzi.
+More fragments = more context = more complete answers.
+
+### Tip 3: Save frequently used prompts
+
+Create a file `my_prompts.txt` with ready contexts for:
+
+- Standard DataTable
+- Standard Form with validation
+- Standard CRUD composable
+
+Copy-paste when needed!
+
+### Tip 4: Remind Copilot when it hallucinates
+
+If Copilot starts making things up, paste again:
+
+```
+REMEMBER: Use ONLY the provided context. No external knowledge.
+```
 
 ---
 
-## 🎓 Najlepsze praktyki
+## 🐛 Common Problems
 
-### ✅ Tak należy robić:
+### Problem: "Script not finding databases"
 
-1. **Zawsze używaj generatora przed złożonym pytaniem**
-   - Nie pytaj Copilota "na ślepo" o API
-
-2. **Weryfikuj cytowane źródła**
-   - Sprawdź czy fragmenty w prompcie rzeczywiście odpowiadają na pytanie
-
-3. **Jeden prompt = jedno pytanie**
-   - Nie zadawaj wielu pytań w jednym prompcie
-
-4. **Używaj konkretnych nazw z dokumentacji**
-   - "DataTable props" zamiast "opcje tabelki"
-
-### ❌ Tak NIE należy robić:
-
-1. **Nie mieszaj frameworków w jednym pytaniu**
-   - Źle: "Jak używać Vue Router w React?"
-   - Dobrze: "Jak używać route params w Nuxt 3?"
-
-2. **Nie ufaj autouzupełnieniom bez kontekstu**
-   - Inline suggestions mogą być przestarzałe
-
-3. **Nie pytaj o rzeczy spoza dokumentacji**
-   - Jeśli nie ma w bazie, Copilot powie "Brak informacji"
-
----
-
-## 🐛 Troubleshooting
-
-### Problem: "Copilot nadal halucynuje"
-
-**Rozwiązanie:**
-
-1. Upewnij się że skopiowałeś **cały prompt** (z `<context>`)
-2. Zwiększ `TOP_K` do 10 w pliku
-3. Na końcu promptu dodaj: "REMEMBER: Use ONLY the provided context."
-
-### Problem: "Brak fragmentów dla mojego pytania"
-
-**Rozwiązanie:**
-
-1. Pytanie jest zbyt ogólne → Sprecyzuj
-2. Zmień formulację (spróbuj innych słów kluczowych)
-3. Sprawdź czy temat jest w dokumentacji:
-   ```bash
-   grep -i "nazwa_tematu" RAG/nuxt-llms-full.txt
-   ```
-
-### Problem: "Skrypt się crashuje"
-
-**Rozwiązanie:**
+**Solution:**
 
 ```bash
-pip install --upgrade langchain-community langchain-chroma sentence-transformers
+cd RAG
+python3 index_db.py --all
 ```
+
+Wait 1-2 minutes for indexing.
+
+### Problem: "Copilot ignores context"
+
+**Solution:**
+
+1. Check if you copied **entire prompt** (with `<context>` tags)
+2. Try with smaller model: GPT-3.5 sometimes ignores instructions
+3. Use GPT-4 or Claude Sonnet
+
+### Problem: "No fragments for my question"
+
+**Solution:**
+
+1. Be more specific - add framework name (e.g. "in Nuxt 3", "in PrimeVue")
+2. Check if topic is in documentation:
+   - `nuxt-llms-full.txt` for Nuxt
+   - `primevue-llms-full.txt` for PrimeVue
+3. Change question wording
 
 ---
 
-## 📊 Benchmark - Czy system działa?
+## ✅ Checklist for each question
 
-Przetestuj te 3 pytania:
-
-### Test 1: PrimeVue
-
-```
-Pytanie: "Jak zrobić sortowanie w DataTable?"
-Oczekiwane: Prop `sortable`, przykład użycia
-```
-
-### Test 2: Nuxt
-
-```
-Pytanie: "Jaka jest różnica między useFetch a $fetch?"
-Oczekiwane: Wyjaśnienie SSR vs client-side
-```
-
-### Test 3: Kombinowane
-
-```
-Pytanie: "Jak połączyć Nuxt composable z PrimeVue DataTable?"
-Oczekiwane: Kod z useFetch + :value binding
-```
-
-**Jeśli wszystkie 3 przechodzą → System działa! 🎉**
+- [ ] Formulate specific question
+- [ ] Run `generate_prompt.py` or `generate_prompt_universal.py`
+- [ ] Copy **entire** generated prompt
+- [ ] Paste to Copilot Chat
+- [ ] Verify Copilot cites sources
+- [ ] Check if code uses only APIs from context
+- [ ] Test code in project
 
 ---
 
-## 📚 Więcej pomocy
+## 📚 Next Steps
 
-- 📖 [USAGE.md](USAGE.md) - Pełna dokumentacja
-- 💡 [EXAMPLE_QUESTIONS.md](EXAMPLE_QUESTIONS.md) - 50+ gotowych pytań
-- 🔧 [README.md](README.md) - Dokumentacja techniczna
-
----
-
-## 🚀 Następne kroki
-
-Po opanowaniu podstaw:
-
-1. **Dostosuj critical_rules** w `generate_prompt.py`
-   - Dodaj własne reguły (np. "Always use TypeScript strict")
-
-2. **Stwórz FAQ z często używanymi promptami**
-   - Zapisz prompty w pliku tekstowym
-
-3. **Eksperymentuj z TOP_K**
-   - Znajdź optymalną ilość fragmentów dla Twoich potrzeb
+1. ✅ **Try 5-10 questions** from [EXAMPLE_QUESTIONS.md](EXAMPLE_QUESTIONS.md)
+2. 📖 Read full guide [USAGE.md](USAGE.md)
+3. 🚀 Check automation tools [AUTOMATION.md](../AUTOMATION.md)
+4. 🔧 Customize `TOP_K` and rules in scripts
+5. 🎯 Build real project with zero hallucinations!
 
 ---
 
-Made with 🧠 + RAG + GitHub Copilot
+**Questions? Problems? → [GitHub Repository](https://github.com/ThomasHoryn/nuxt-primevue-rag)**
+
+🎉 **Happy coding without hallucinations!**
